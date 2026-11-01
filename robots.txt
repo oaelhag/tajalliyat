@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /print/
+Sitemap: https://oaelhag.github.io/tajalliyat/sitemap.xml

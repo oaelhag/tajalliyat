@@ -9,6 +9,10 @@
 2. من **Settings → Pages** اختر: **Deploy from a branch**، الفرع `main`، المجلد `/ (root)`.
 3. بعد دقيقة يعمل الموقع على: `https://<اسم-المستخدم>.github.io/<اسم-المستودع>/`
 
+## الموقع المباشر
+`https://oaelhag.github.io/tajalliyat/` — صفحات الأسماء للمشاركة (مع معاينة): `n/<id>/`، صفحات الطباعة: `print/<id>-<group>.html`، ملفات PDF: `pdf/`، صور المعاينة: `og/`.
+إعادة التوليد: `python3 source/tools/gen_static.py ../site/dist/data.js .` ثم `node source/tools/render.js og` و`node source/tools/render.js pdf` (Playwright).
+
 ## ما يعمل خارج Claude وما لا يعمل
 - يعمل: كل الصفحات، والرحلة (تُحفظ في متصفح الزائر)، وملف تذكير التقويم، والفيديوهات.
 - لا يعمل بعد: تسجيل الرسائل اليومية (يحتاج خادماً وخدمة إرسال، في النسخة الكاملة).

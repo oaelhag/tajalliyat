@@ -3,6 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>تجليات الأسماء | تأمّل أسماء الله الحسنى</title>
+<meta name="description" content="تجلٍّ يومي وأسئلة تأمّل ورحلة ١٤٠ يوماً مع أسماء الله الحسنى، لست فئات: طفل، طفلة، شاب، شابة، أب، أم.">
+<link rel="canonical" href="https://oaelhag.github.io/tajalliyat/">
+<meta property="og:type" content="website"><meta property="og:locale" content="ar_AR">
+<meta property="og:site_name" content="تجليات الأسماء">
+<meta property="og:title" content="تجليات الأسماء">
+<meta property="og:description" content="تأمّل أسماء الله الحسنى: تجلٍّ يومي، أسئلة، ورحلة ١٤٠ يوماً.">
+<meta property="og:url" content="https://oaelhag.github.io/tajalliyat/">
+<meta property="og:image" content="https://oaelhag.github.io/tajalliyat/og/default.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://oaelhag.github.io/tajalliyat/og/default.jpg">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>تجليات الأسماء</title>
@@ -164,6 +176,8 @@ footer{font-family:var(--f-ui);font-size:var(--fs-cap);color:var(--ink-soft);pad
 .theme:hover{border-color:var(--gold)}
 .share{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;font-family:var(--f-ui)}
 .share button,.share a{font-family:var(--f-ui);font-size:var(--fs-cap);border:1px solid var(--rule);background:var(--leaf);color:var(--ink);padding:5px 12px;border-radius:999px;cursor:pointer;text-decoration:none;transition:background .2s,border-color .2s,transform .2s}
+.shi{display:grid;gap:4px}.share.mini{margin-top:2px;gap:6px}.share.mini button,.share.mini a{font-size:.72rem;padding:2px 10px;opacity:.85}
+.namelinks{margin:14px 0}
 .share button:hover,.share a:hover{border-color:var(--gold);transform:translateY(-1px)}
 .modal{position:fixed;inset:0;z-index:50;background:rgba(5,8,18,.82);display:grid;place-items:center;padding:16px;animation:fadeIn .3s ease}
 .modal .box{background:var(--leaf);border-radius:18px;padding:14px;max-width:420px;width:100%;display:grid;gap:12px;max-height:94vh;overflow:auto}
@@ -222,11 +236,12 @@ const G=n=>n.groups[aud];
 
 
 /* ── share ─────────────────────────────── */
-function fullText(text,ref){const u=/^https?:/.test(location.protocol)?'\n'+location.href.split('#')[0]:'';return text+(ref?'\n'+ref:'')+'\n\nتجليات الأسماء'+u;}
+const SITE_URL='https://oaelhag.github.io/tajalliyat/';
+function fullText(text,ref,meta){const u='\n'+(meta&&meta.id?SITE_URL+'n/'+meta.id+'/':SITE_URL);const nm=meta&&meta.plain?'\n«من تدبّر اسم الله: '+meta.plain+'»':'';return text+(ref?'\n'+ref:'')+nm+'\n\nتجليات الأسماء'+u;}
 async function copyText(t){try{await navigator.clipboard.writeText(t);return true}catch(e){try{const a=h('textarea',{style:'position:fixed;opacity:0'});a.value=t;document.body.append(a);a.select();const ok=document.execCommand('copy');a.remove();return ok}catch(e2){return false}}}
 function wrapLines(c,text,maxW){const out=[];for(const para of text.split('\n')){let line='';for(const w of para.split(' ')){const t=line?line+' '+w:w;if(c.measureText(t).width>maxW&&line){out.push(line);line=w}else line=t}out.push(line)}return out;}
-async function makeCard(text,ref,kind){
-  try{await document.fonts.load('48px "Amiri Quran Local"');await document.fonts.load('600 40px "Noto Naskh Arabic"');await document.fonts.load('500 30px "IBM Plex Sans Arabic"');}catch(e){}
+async function makeCard(text,ref,kind,meta){
+  try{await document.fonts.load('700 80px "Reem Kufi"');await document.fonts.load('48px "Amiri Quran Local"');await document.fonts.load('600 40px "Noto Naskh Arabic"');await document.fonts.load('500 30px "IBM Plex Sans Arabic"');}catch(e){}
   const W=1080,H=1350,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');c.direction='rtl';c.textAlign='center';c.textBaseline='middle';
   const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0E1324');g.addColorStop(1,'#1F2A4F');c.fillStyle=g;c.fillRect(0,0,W,H);
   const rg=c.createRadialGradient(W/2,H*.42,0,W/2,H*.42,720);rg.addColorStop(0,'rgba(227,180,92,.22)');rg.addColorStop(1,'rgba(227,180,92,0)');c.fillStyle=rg;c.fillRect(0,0,W,H);
@@ -234,25 +249,28 @@ async function makeCard(text,ref,kind){
   c.fillStyle='#E3B45C';c.font='500 40px "IBM Plex Sans Arabic",system-ui,sans-serif';c.fillText('تجليات الأسماء',W/2,132);
   const q=kind==='ayah',fam=q?'"Amiri Quran Local","Amiri Quran","Amiri",serif':'"Noto Naskh Arabic","Amiri",serif';
   let size=q?88:68,lines;const body=q?'﴿ '+text+' ﴾':text;
-  for(;size>34;size-=2){c.font=`${q?400:600} ${size}px ${fam}`;lines=wrapLines(c,body,W-240);if(lines.length*size*1.9<H-520)break;}
-  const lh=size*1.9,y0=H/2-(lines.length-1)*lh/2-20;c.fillStyle='#F4EFE2';c.shadowColor='rgba(227,180,92,.35)';c.shadowBlur=18;
+  const lim=meta&&meta.name?H-760:H-520;for(;size>34;size-=2){c.font=`${q?400:600} ${size}px ${fam}`;lines=wrapLines(c,body,W-240);if(lines.length*size*1.9<lim)break;}
+  const lh=size*1.9,y0=(meta&&meta.name?H/2-70:H/2)-(lines.length-1)*lh/2-20;if(meta&&meta.label){c.fillStyle='#A9B3D0';c.font='500 34px "IBM Plex Sans Arabic",system-ui,sans-serif';c.fillText(meta.label,W/2,222);}c.fillStyle='#F4EFE2';c.shadowColor='rgba(227,180,92,.35)';c.shadowBlur=18;
   lines.forEach((l,i)=>c.fillText(l,W/2,y0+i*lh));c.shadowBlur=0;
-  if(ref){c.fillStyle='#A9B3D0';c.font='500 30px "IBM Plex Sans Arabic",system-ui,sans-serif';c.fillText(ref,W/2,H-190);}
+  if(ref){c.fillStyle='#A9B3D0';c.font='500 30px "IBM Plex Sans Arabic",system-ui,sans-serif';c.fillText(ref,W/2,meta&&meta.name?H-390:H-190);}
+  if(meta&&meta.name){c.fillStyle='rgba(227,180,92,.4)';c.fillRect(W/2-60,H-345,120,3);c.fillStyle='#A9B3D0';c.font='500 30px "IBM Plex Sans Arabic",system-ui,sans-serif';c.fillText('من تدبّر اسم الله',W/2,H-295);c.fillStyle='#E3B45C';c.font='700 96px "Reem Kufi","Noto Naskh Arabic",serif';c.fillText(meta.name,W/2,H-215);}
   c.fillStyle='rgba(227,180,92,.8)';c.font='500 26px "IBM Plex Sans Arabic",system-ui,sans-serif';c.fillText('✦  اقرأ · تأمّل · جرّب  ✦',W/2,H-120);
   return new Promise(r=>cv.toBlob(b=>r({blob:b,url:cv.toDataURL('image/png')}),'image/png'));}
-async function shareCard(text,ref,kind){
-  const {blob,url}=await makeCard(text,ref,kind);
+async function shareCard(text,ref,kind,meta){
+  const {blob,url}=await makeCard(text,ref,kind,meta);
   const file=new File([blob],'tajalliyat.png',{type:'image/png'});
-  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],text:fullText(text,ref)});return;}catch(e){if(e&&e.name==='AbortError')return;}}
+  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],text:fullText(text,ref,meta)});return;}catch(e){if(e&&e.name==='AbortError')return;}}
   const m=h('div',{class:'modal',role:'dialog','aria-label':'بطاقة للمشاركة',onclick:e=>{if(e.target===m)m.remove()}},
     h('div',{class:'box'},h('img',{src:url,alt:'بطاقة'}),h('p',{class:'cardhow'},'اضغط مطولاً على الصورة لحفظها أو مشاركتها، أو استعمل زر التنزيل.'),
       h('div',{class:'row'},h('a',{class:'btn',href:url,download:'tajalliyat.png'},'تنزيل الصورة'),h('button',{class:'btn ghost',onclick:()=>m.remove()},'إغلاق'))));
   document.body.append(m);}
-function shareRow(text,ref,kind){
-  const cp=h('button',{type:'button',onclick:async()=>{const ok=await copyText(fullText(text,ref));cp.textContent=ok?'تم النسخ ✓':'تعذّر النسخ';setTimeout(()=>cp.textContent='نسخ',1800);}},'نسخ');
-  return h('div',{class:'share'},cp,
-    h('a',{href:'https://wa.me/?text='+encodeURIComponent(fullText(text,ref)),target:'_blank',rel:'noopener'},'واتساب'),
-    h('button',{type:'button',onclick:()=>shareCard(text,ref,kind)},'بطاقة للمشاركة'));}
+function shareRow(text,ref,kind,meta,mini){
+  const cp=h('button',{type:'button',onclick:async()=>{const ok=await copyText(fullText(text,ref,meta));cp.textContent=ok?'تم النسخ ✓':'تعذّر النسخ';setTimeout(()=>cp.textContent='نسخ',1800);}},'نسخ');
+  return h('div',{class:'share'+(mini?' mini':'')},cp,
+    h('a',{href:'https://wa.me/?text='+encodeURIComponent(fullText(text,ref,meta)),target:'_blank',rel:'noopener'},'واتساب'),
+    h('button',{type:'button',onclick:()=>shareCard(text,ref,kind,meta)},'بطاقة للمشاركة'));}
+function nmeta(n,label){return {id:n.id,plain:n.plain,name:n.name,label};}
+function shareItem(t,n,kind){return h('div',{class:'shi'},h('span',{},t),shareRow(t+(kind==='q'?'':'.'),'',kind,nmeta(n,kind==='q'?'سؤال للتأمل':'تجلٍّ للتأمل'),true));}
 
 /* ── theme ─────────────────────────────── */
 function curTheme(){const t=document.documentElement.dataset.theme;if(t)return t;return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
@@ -274,11 +292,11 @@ function today(){
       h('div',{class:'meta'},h('span',{},hijri),h('span',{},FOR[aud])),
       h('p',{class:'eyebrow'},'تجلٍّ اليوم من اسم'),
       h('h1',{class:'name'},n.name),
-      h('p',{class:'tajalli'},taj+'.'),shareRow(taj+'.','من اسم الله '+n.plain,'taj'),
+      h('p',{class:'tajalli'},taj+'.'),shareRow(taj+'.','','taj',nmeta(n,'تجلّي اليوم')),
       h('p',{class:'muted'},'لا تبحث عن هذا الاسم في الكتب اليوم؛ ابحث عنه في يومك. حين ترى هذا المعنى أمامك، قل في سرّك: «يا '+n.plain.split(' ')[0].replace(/^ال/,'')+'، وصلني أثرك».'),
       ayahEl(n.ayah),
       h('div',{class:'trio'},
-        h('div',{},h('h3',{},'سؤال اليوم'),h('p',{},q)),
+        h('div',{},h('h3',{},'سؤال اليوم'),h('p',{},q),shareRow(q,'','q',nmeta(n,'سؤال اليوم'),true)),
         h('div',{},h('h3',{},'مهمة صغيرة'),h('p',{},task)),
         h('div',{},h('h3',{},'المعنى في سطر'),h('p',{},g.simple))),
       h('div',{class:'actions'},h('a',{class:'btn',href:'#name-'+n.id},'افتح صفحة الاسم'),h('a',{class:'btn ghost',href:'#journey'},'تابع رحلتك')))
@@ -302,18 +320,20 @@ function prodEl(id){const q=window.PROD&&PROD[id];if(!q)return null;
     h('div',{style:'display:grid;gap:10px'},h('h3',{},'صور للمشاركة'),h('p',{class:'muted small'},'خمس شرائح وخلفية للجوال. اضغط على الصورة لفتحها وحفظها.'),
       h('div',{class:'prodimgs'},imgs.map(u=>h('a',{href:u,target:'_blank',rel:'noopener',download:''},h('img',{src:u,loading:'lazy',alt:q.cover}))))),
     h('details',{class:'sch'},h('summary',{},'جدول النشر · الأسبوع '+ar(q.week)),h('ul',{},q.schedule.map(r=>h('li',{},r[1]+' '+r[0]+' — '+r[2])))));}
+async function shareName(n){const url=SITE_URL+'n/'+n.id+'/',t=n.plain+' — '+n.tagline;if(navigator.share){try{await navigator.share({title:n.plain+' | تجليات الأسماء',text:t,url});return;}catch(e){if(e&&e.name==='AbortError')return;}}if(await copyText(t+'\n'+url))alert('تم نسخ رابط الصفحة');}
 function nameView(id){
   const n=byId[id];if(!n){location.hash='names';return;}
   const g=G(n),v=$('#v-name');
   const panels={
-    tajalliyat:()=>h('div',{style:'display:grid;gap:10px'},h('p',{class:'muted small'},'أين ترى هذا الاسم في يومك؟ اقرأها ببطء، ثم ابحث عن واحد منها اليوم.'),h('ol',{class:'list'},g.tajalliyat.map(t=>h('li',{},t)))),
-    questions:()=>h('div',{style:'display:grid;gap:10px'},h('p',{class:'muted small'},'لا تجب عنها كلها. اختر سؤالاً واحداً واجلس معه دقيقتين.'),h('ol',{class:'list'},g.questions.map(t=>h('li',{},t)))),
+    tajalliyat:()=>h('div',{style:'display:grid;gap:10px'},h('p',{class:'muted small'},'أين ترى هذا الاسم في يومك؟ اقرأها ببطء، ثم ابحث عن واحد منها اليوم.'),h('ol',{class:'list'},g.tajalliyat.map(t=>h('li',{},shareItem(t,n,'taj'))))),
+    questions:()=>h('div',{style:'display:grid;gap:10px'},h('p',{class:'muted small'},'لا تجب عنها كلها. اختر سؤالاً واحداً واجلس معه دقيقتين.'),h('ol',{class:'list'},g.questions.map(t=>h('li',{},shareItem(t,n,'q'))))),
     tasks:()=>h('div',{class:'kolb'},KOLB.map(([k,l])=>h('div',{},h('h3',{},l,h('span',{},ar(g.tasks[k].length)+' مهام')),h('ul',{},g.tasks[k].map(t=>h('li',{},t))))))
   };
   const tabBtn=(k,l)=>h('button',{role:'tab','aria-selected':String(tab===k),onclick:()=>{tab=k;nameView(id)}},l);
   fill(v,
     h('div',{class:'namehead'},h('p',{class:'eyebrow'},'اسم الله'),h('h1',{class:'n'},n.name),h('p',{class:'tag'},n.tagline)),
     ayahEl(n.ayah),
+    h('div',{class:'share namelinks'},h('a',{href:SITE_URL+'print/'+id+'-'+aud+'.html',target:'_blank',rel:'noopener'},'اطبع الاسم بمعناه وأسئلته (PDF) '+FOR[aud]),h('a',{href:SITE_URL+'pdf/'+id+'-'+aud+'.pdf',target:'_blank',rel:'noopener',download:''},'حمّل PDF'),h('button',{type:'button',onclick:()=>shareName(n)},'شارك صفحة الاسم')),
     h('div',{class:'split'},
       h('div',{class:'prose'},h('h2',{},'المعنى'),h('p',{},n.simple),h('p',{class:'muted'},n.deep)),
       h('div',{class:'prose'},h('h2',{},FOR[aud]),h('p',{},g.simple),h('p',{class:'muted'},g.deep))),
