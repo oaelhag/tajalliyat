@@ -468,7 +468,7 @@ function videos(){fill($('#v-videos'),
 /* ── feelings ──────────────────────────── */
 const F=window.FEEL||[];
 function feelChips(cur){return h('div',{class:'fchips'},F.map(f=>h('a',{class:'fchip',href:'#feel-'+f.id,'aria-current':f.id===cur?'page':null},f.label)));}
-function feelBar(){return h('div',{class:'feelbar'},h('p',{},'بماذا تشعر الآن؟'),feelChips());}
+function feelBar(){return h('div',{class:'feelbar'},h('p',{},'بماذا تشعر الآن؟'),feelChips(),h('p',{style:'margin-top:10px'},h('a',{href:'guide.html',style:'color:var(--gold);font-weight:600'},'اسم يناسب حالك: اختر موقفك وانظر ما يناسبه من الأسماء')));}
 function feel(id){
   const f=F.find(x=>x.id===id);const v=$('#v-feel');
   if(!f){fill(v,h('div',{class:'prose'},h('h1',{},'قلبي الآن'),
