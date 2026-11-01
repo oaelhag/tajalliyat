@@ -145,6 +145,7 @@ textarea{width:100%;min-height:96px;border:1px solid var(--rule);border-radius:1
 .status{font-family:var(--f-ui);font-size:var(--fs-cap);color:var(--ink-soft);min-height:1.4em}
 
 /* reminder */
+.news{background:var(--gold-soft);border-radius:16px;padding:22px;display:grid;gap:12px}.news ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}.news li{display:grid;gap:2px}.news time{font-size:.8rem;opacity:.7}.news details summary{cursor:pointer;margin-top:4px}
 .remind{background:var(--lapis-soft);border-radius:16px;padding:22px;display:grid;gap:14px}
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
 .field{display:grid;gap:4px;font-family:var(--f-ui);font-size:var(--fs-cap);color:var(--ink-soft)}
@@ -217,6 +218,7 @@ body{transition:background .35s,color .35s}
 
 <script src="data.js"></script>
 <script src="prod.js"></script>
+<script src="news.js"></script>
 <script>
 const A=window.ASMA||[], byId=Object.fromEntries(A.map(n=>[n.id,n]));
 const GROUPS=[['boy','طفل'],['girl','طفلة'],['youngman','شاب'],['youngwoman','شابة'],['father','أب'],['mother','أم']];
@@ -300,7 +302,7 @@ function today(){
         h('div',{},h('h3',{},'مهمة صغيرة'),h('p',{},task)),
         h('div',{},h('h3',{},'المعنى في سطر'),h('p',{},g.simple))),
       h('div',{class:'actions'},h('a',{class:'btn',href:'#name-'+n.id},'افتح صفحة الاسم'),h('a',{class:'btn ghost',href:'#journey'},'تابع رحلتك')))
-    ,feelBar(),reminderBlock(),namesGrid('الأسماء في هذه النسخة'));
+    ,feelBar(),newsBlock(),reminderBlock(),namesGrid('الأسماء في هذه النسخة'));
 }
 
 /* ── names ─────────────────────────────── */
@@ -406,6 +408,11 @@ function journey(){
 
 /* ── reminder ──────────────────────────── */
 let remindDb=null;
+const SIGNUP_ON=false; // فعّله عند توفر خادم يستقبل التسجيل
+function newsBlock(){const L=(window.NEWS||[]).slice().sort((a,b)=>b[0].localeCompare(a[0]));if(!L.length)return null;
+  const row=r=>h('li',{},h('time',{datetime:r[0]},new Date(r[0]).toLocaleDateString('ar',{year:'numeric',month:'long',day:'numeric'})),h('b',{},r[1]),h('span',{},r[2]));
+  return h('div',{class:'news'},h('h2',{},'ما الجديد'),h('ul',{},L.slice(0,6).map(row)),
+    L.length>6?h('details',{},h('summary',{},'كل التحديثات'),h('ul',{style:'margin-top:12px'},L.slice(6).map(row))):null);}
 function reminderBlock(){
   const time=h('input',{type:'time',id:'rtime',value:store.get('rtime','07:30')});
   const msg=h('p',{class:'status','aria-live':'polite'});
@@ -417,10 +424,10 @@ function reminderBlock(){
     h('p',{},'أضف تذكيراً يتكرر كل يوم إلى تقويم هاتفك، فيصلك تنبيه في الوقت الذي تختاره يدعوك إلى تجلّي اليوم.'),
     h('div',{class:'row'},h('label',{class:'field',for:'rtime'},'وقت التذكير',time),
       h('button',{class:'btn',onclick:()=>saveIcs(time.value,msg)},'أضفه إلى التقويم')),msg,
-    h('form',{class:'row',style:'border-top:1px solid var(--rule);padding-top:14px',onsubmit:e=>{e.preventDefault();signup(ch.value,contact.value,time.value,msg2);}},
+    ...(SIGNUP_ON?[h('form',{class:'row',style:'border-top:1px solid var(--rule);padding-top:14px',onsubmit:e=>{e.preventDefault();signup(ch.value,contact.value,time.value,msg2);}},
       h('label',{class:'field',for:'rch'},'أو سجّل لتصلك رسالة يومية عند إطلاق الخدمة',ch),
       h('label',{class:'field',for:'rcontact',style:'flex:1;min-width:180px'},'وسيلة التواصل',contact),
-      h('button',{class:'btn ghost',type:'submit'},'سجّلني')),msg2);
+      h('button',{class:'btn ghost',type:'submit'},'سجّلني')),msg2]:[]));
 }
 async function saveIcs(t,msg){
   store.set('rtime',t);const [hh,mm]=t.split(':');const d=new Date();const p=x=>String(x).padStart(2,'0');
