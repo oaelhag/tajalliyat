@@ -146,6 +146,7 @@ textarea{width:100%;min-height:96px;border:1px solid var(--rule);border-radius:1
 
 /* reminder */
 .news{background:var(--gold-soft);border-radius:16px;padding:22px;display:grid;gap:12px}.news ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}.news li{display:grid;gap:2px}.news time{font-size:.8rem;opacity:.7}.news details summary{cursor:pointer;margin-top:4px}
+.contact{background:var(--lapis-soft);border-radius:16px;padding:22px;display:grid;gap:12px}.contact summary{cursor:pointer;font-weight:700}.contact iframe{width:100%;height:760px;border:0;border-radius:12px;background:#fff;margin-top:12px}
 .remind{background:var(--lapis-soft);border-radius:16px;padding:22px;display:grid;gap:14px}
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
 .field{display:grid;gap:4px;font-family:var(--f-ui);font-size:var(--fs-cap);color:var(--ink-soft)}
@@ -302,7 +303,7 @@ function today(){
         h('div',{},h('h3',{},'مهمة صغيرة'),h('p',{},task)),
         h('div',{},h('h3',{},'المعنى في سطر'),h('p',{},g.simple))),
       h('div',{class:'actions'},h('a',{class:'btn',href:'#name-'+n.id},'افتح صفحة الاسم'),h('a',{class:'btn ghost',href:'#journey'},'تابع رحلتك')))
-    ,feelBar(),newsBlock(),reminderBlock(),namesGrid('الأسماء في هذه النسخة'));
+    ,feelBar(),newsBlock(),reminderBlock(),contactBlock(),namesGrid('الأسماء في هذه النسخة'));
 }
 
 /* ── names ─────────────────────────────── */
@@ -413,6 +414,12 @@ function newsBlock(){const L=(window.NEWS||[]).slice().sort((a,b)=>b[0].localeCo
   const row=r=>h('li',{},h('time',{datetime:r[0]},new Date(r[0]).toLocaleDateString('ar',{year:'numeric',month:'long',day:'numeric'})),h('b',{},r[1]),h('span',{},r[2]));
   return h('div',{class:'news'},h('h2',{},'ما الجديد'),h('ul',{},L.slice(0,6).map(row)),
     L.length>6?h('details',{},h('summary',{},'كل التحديثات'),h('ul',{style:'margin-top:12px'},L.slice(6).map(row))):null);}
+const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSefTfJgH1C3c6GfhVvPjChKNyRQyJ8YbD9GpkvZ5ZsmajaH9w/viewform';
+function contactBlock(){const box=h('div',{});
+  const d=h('details',{ontoggle:()=>{if(d.open&&!box.firstChild)box.append(h('iframe',{src:FORM_URL+'?embedded=true',title:'نموذج التواصل',loading:'lazy'}));}},
+    h('summary',{},'اكتب لنا اقتراحاً أو ملاحظة أو سؤالاً'),box);
+  return h('div',{class:'contact'},h('h2',{},'تواصل معنا'),h('p',{},'يسعدنا أن نسمع رأيك. رسالتك تصل إلى صاحب الموقع وحده، ووسيلة التواصل اختيارية.'),d,
+    h('p',{class:'muted small'},h('a',{href:FORM_URL,target:'_blank',rel:'noopener'},'أو افتح النموذج في صفحة مستقلة')));}
 function reminderBlock(){
   const time=h('input',{type:'time',id:'rtime',value:store.get('rtime','07:30')});
   const msg=h('p',{class:'status','aria-live':'polite'});
