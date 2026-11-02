@@ -2,7 +2,7 @@
 into a complete standalone page for GitHub Pages."""
 import sys, pathlib
 src = pathlib.Path(sys.argv[1]).read_text(encoding='utf-8')
-CREDIT = 'تطوير أسامة عبد الهادي الجابري'
+CREDIT = 'تطوير أسامة عبد الهادي الهاجري'
 if CREDIT not in src:
     assert src.count('</footer>') == 1, 'expected exactly one <footer>'
     src = src.replace('</footer>', '<br>' + CREDIT + '</footer>')
