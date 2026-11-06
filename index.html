@@ -194,6 +194,25 @@ body{transition:background .35s,color .35s}
 .card:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 8px 24px -14px rgba(0,0,0,.35)}
 .fcard{animation:riseIn .6s cubic-bezier(.2,.7,.2,1)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.card:hover{transform:none}}
+/* ── mobile pass: compact header + bottom tab bar, modal motion, journey swap, touch targets ── */
+.modal{overflow-y:auto;overscroll-behavior:contain}
+.modal .box{animation:riseIn .3s cubic-bezier(.2,.7,.2,1)}
+.modal.out{animation:fadeOut .2s ease forwards}
+.modal.out .box{animation:boxOut .2s ease forwards}
+@keyframes fadeOut{to{opacity:0}}
+@keyframes boxOut{to{opacity:0;transform:translateY(8px) scale(.98)}}
+.daycard{scroll-margin-top:76px}
+.daycard.swap{animation:riseIn .35s cubic-bezier(.2,.7,.2,1)}
+@media (pointer:coarse){
+ .chip,.fchip,.tabs button,.share button,.share a,.theme,.btn{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box}
+}
+@media (max-width:640px){
+ body{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+ .top .col{flex-wrap:nowrap;gap:8px;padding-block:6px}
+ .brand{flex:1;min-width:0;min-height:44px}
+ nav{position:fixed;inset:auto 0 0 0;z-index:6;margin:0;gap:0;display:grid;grid-template-columns:repeat(5,1fr);background:var(--paper);border-top:1px solid var(--rule);direction:rtl;padding:4px max(6px,env(safe-area-inset-right,0px)) calc(4px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px))}
+ nav a{display:flex;align-items:center;justify-content:center;min-height:48px;padding:0 2px;font-size:var(--fs-cap);text-align:center;border-radius:10px;box-sizing:border-box}
+}
 </style>
 
 <div class="wrap top"><div class="col">
@@ -263,10 +282,26 @@ async function shareCard(text,ref,kind,meta){
   const {blob,url}=await makeCard(text,ref,kind,meta);
   const file=new File([blob],'tajalliyat.png',{type:'image/png'});
   if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],text:fullText(text,ref,meta)});return;}catch(e){if(e&&e.name==='AbortError')return;}}
-  const m=h('div',{class:'modal',role:'dialog','aria-label':'بطاقة للمشاركة',onclick:e=>{if(e.target===m)m.remove()}},
+  const opener=document.activeElement,prevOverflow=document.body.style.overflow;
+  const onKey=e=>{
+    if(e.key==='Escape'){e.preventDefault();close();return;}
+    if(e.key!=='Tab')return;
+    const f=[...m.querySelectorAll('a[href],button')];if(!f.length)return;
+    const a=f[0],z=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus();}
+    else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus();}
+  };
+  const close=()=>{
+    if(m.dataset.closing)return;m.dataset.closing='1';
+    document.removeEventListener('keydown',onKey,true);document.body.style.overflow=prevOverflow;
+    m.classList.add('out');
+    setTimeout(()=>{m.remove();if(opener&&opener.focus)opener.focus({preventScroll:true});},matchMedia('(prefers-reduced-motion:reduce)').matches?0:200);
+  };
+  const m=h('div',{class:'modal',role:'dialog','aria-modal':'true','aria-label':'بطاقة للمشاركة',onclick:e=>{if(e.target===m)close()}},
     h('div',{class:'box'},h('img',{src:url,alt:'بطاقة'}),h('p',{class:'cardhow'},'اضغط مطولاً على الصورة لحفظها أو مشاركتها، أو استعمل زر التنزيل.'),
-      h('div',{class:'row'},h('a',{class:'btn',href:url,download:'tajalliyat.png'},'تنزيل الصورة'),h('button',{class:'btn ghost',onclick:()=>m.remove()},'إغلاق'))));
-  document.body.append(m);}
+      h('div',{class:'row'},h('a',{class:'btn',href:url,download:'tajalliyat.png'},'تنزيل الصورة'),h('button',{class:'btn ghost',onclick:close},'إغلاق'))));
+  document.body.style.overflow='hidden';document.addEventListener('keydown',onKey,true);
+  document.body.append(m);m.querySelector('.btn').focus();}
 function shareRow(text,ref,kind,meta,mini){
   const cp=h('button',{type:'button',onclick:async()=>{const ok=await copyText(fullText(text,ref,meta));cp.textContent=ok?'تم النسخ ✓':'تعذّر النسخ';setTimeout(()=>cp.textContent='نسخ',1800);}},'نسخ');
   return h('div',{class:'share'+(mini?' mini':'')},cp,
@@ -378,6 +413,7 @@ let saveT=null;
 function saveJ(){store.set('journey',J);clearTimeout(saveT);saveT=setTimeout(async()=>{if(!jref)return;
   try{await jref.set({done:J.done,notes:J.notes,aud,updated:new Date().toISOString()});setStatus('حُفظ تقدّمك في حسابك.')}catch(e){setStatus('حُفظ تقدّمك على هذا الجهاز فقط.')}},700);}
 function setStatus(t){const s=$('#jstatus');if(s)s.textContent=t;}
+function focusDay(){const c=$('.daycard');if(!c)return;c.classList.add('swap');const t=c.querySelector('h2');if(t){t.setAttribute('tabindex','-1');t.focus({preventScroll:true});}c.scrollIntoView({block:'start'});}
 function journey(){
   const [cid,cd]=current();const [id,d]=viewDay||[cid,cd];const n=byId[id];
   const total=A.length*7,done=Object.values(J.done).filter(Boolean).length;
@@ -395,9 +431,9 @@ function journey(){
       ...dayContent(n,d),
       note,
       h('div',{class:'actions'},
-        h('button',{class:'btn',onclick:()=>{J.done[k]=!isDone;viewDay=null;saveJ();journey();}},isDone?'تراجع عن الإتمام':'أتممتُ هذا اليوم'),
-        h('button',{class:'btn ghost',disabled:d===0&&A[0].id===id?'':null,onclick:()=>{const i=A.findIndex(x=>x.id===id)*7+d-1;viewDay=[A[Math.floor(i/7)].id,i%7];journey();}},'اليوم السابق'),
-        h('button',{class:'btn ghost',disabled:id===A[A.length-1].id&&d===6?'':null,onclick:()=>{const i=A.findIndex(x=>x.id===id)*7+d+1;viewDay=[A[Math.floor(i/7)].id,i%7];journey();}},'اليوم التالي')),
+        h('button',{class:'btn',onclick:()=>{J.done[k]=!isDone;viewDay=null;saveJ();journey();focusDay();}},isDone?'تراجع عن الإتمام':'أتممتُ هذا اليوم'),
+        h('button',{class:'btn ghost',disabled:d===0&&A[0].id===id?'':null,onclick:()=>{const i=A.findIndex(x=>x.id===id)*7+d-1;viewDay=[A[Math.floor(i/7)].id,i%7];journey();focusDay();}},'اليوم السابق'),
+        h('button',{class:'btn ghost',disabled:id===A[A.length-1].id&&d===6?'':null,onclick:()=>{const i=A.findIndex(x=>x.id===id)*7+d+1;viewDay=[A[Math.floor(i/7)].id,i%7];journey();focusDay();}},'اليوم التالي')),
       h('p',{class:'status',id:'jstatus','aria-live':'polite'})),
     h('div',{style:'display:grid;gap:10px'},h('h3',{},'خريطة الرحلة'),
       h('div',{class:'map'},A.flatMap(x=>[h('span',{class:'nm'},x.plain),h('div',{class:'dots'},[...Array(7)].map((_,i)=>h('button',{
