@@ -158,6 +158,10 @@ textarea{width:100%;min-height:96px;border:1px solid var(--rule);border-radius:1
 /* feelings */
 .feelbar{display:grid;gap:10px;padding:16px 18px;border:1px solid var(--rule);border-radius:16px;background:var(--leaf)}
 .feelbar p{font-family:var(--f-display);font-size:var(--fs-lead)}
+.athar{display:grid;gap:10px;padding:16px 18px;border:1px solid var(--rule);border-radius:16px;background:var(--leaf)}
+.athar p{font-family:var(--f-body);font-size:var(--fs-body);line-height:1.95;margin:0}
+.athar .small{font-size:var(--fs-ui);color:var(--ink-soft)}
+.athar a{font-family:var(--f-ui);color:var(--gold);font-weight:600}
 .fchips{display:flex;flex-wrap:wrap;gap:8px}
 .fchip{font-family:var(--f-ui);font-size:var(--fs-ui);border:1px solid var(--rule);background:var(--paper);padding:7px 15px;border-radius:999px;text-decoration:none;color:var(--ink)}
 .fchip[aria-current="page"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
@@ -444,10 +448,10 @@ function journey(){
 /* ── reminder ──────────────────────────── */
 let remindDb=null;
 const SIGNUP_ON=false; // فعّله عند توفر خادم يستقبل التسجيل
-function atharBlock(){return h('div',{class:'feelbar'},h('h2',{},'أثر الاسم في حياتي'),
+function atharBlock(){return h('div',{class:'athar'},h('h2',{},'أثر الاسم في حياتي'),
   h('p',{},'لا نريد أن نعرف الأسماء فقط، بل أن نلمس أثرها في سلوكنا. بعد أن تؤدي مهمة الاسم، دوّن ما لاحظته في أسئلة قصيرة، ثم عُد إليها لاحقاً لترى ما بقي معك.'),
-  h('p',{style:'font-size:.95em;color:var(--muted)'},'تُحفظ كتاباتك على هذا الجهاز وفي هذا المتصفح فقط، ولا تُرسل إلى أي خادم. إن مسحت بيانات المتصفح أو غيّرت جهازك فلن تجدها، ولذلك نوفر زر «حفظ نسخة احتياطية».'),
-  h('p',{},h('a',{href:'athar.html',style:'color:var(--gold);font-weight:600'},'افتح رحلتي')));}
+  h('p',{class:'small'},'تُحفظ كتاباتك على هذا الجهاز وفي هذا المتصفح فقط، ولا تُرسل إلى أي خادم. إن مسحت بيانات المتصفح أو غيّرت جهازك فلن تجدها، ولذلك نوفر زر «حفظ نسخة احتياطية».'),
+  h('p',{},h('a',{href:'athar.html'},'افتح رحلتي')));}
 function newsBlock(){const L=(window.NEWS||[]).slice().sort((a,b)=>b[0].localeCompare(a[0]));if(!L.length)return null;
   const row=r=>h('li',{},h('time',{datetime:r[0]},new Date(r[0]).toLocaleDateString('ar',{year:'numeric',month:'long',day:'numeric'})),h('b',{},r[1]),h('span',{},r[2]));
   return h('div',{class:'news'},h('h2',{},'ما الجديد'),h('ul',{},L.slice(0,6).map(row)),
