@@ -338,7 +338,7 @@ function today(){
         h('div',{},h('h3',{},'مهمة صغيرة'),h('p',{},task)),
         h('div',{},h('h3',{},'المعنى في سطر'),h('p',{},g.simple))),
       h('div',{class:'actions'},h('a',{class:'btn',href:'#name-'+n.id},'افتح صفحة الاسم'),h('a',{class:'btn ghost',href:'#journey'},'تابع رحلتك')))
-    ,feelBar(),newsBlock(),reminderBlock(),contactBlock(),namesGrid('الأسماء في هذه النسخة'));
+    ,feelBar(),atharBlock(),newsBlock(),reminderBlock(),contactBlock(),namesGrid('الأسماء في هذه النسخة'));
 }
 
 /* ── names ─────────────────────────────── */
@@ -446,6 +446,10 @@ function journey(){
 /* ── reminder ──────────────────────────── */
 let remindDb=null;
 const SIGNUP_ON=false; // فعّله عند توفر خادم يستقبل التسجيل
+function atharBlock(){return h('div',{class:'feelbar'},h('h2',{},'أثر الاسم في حياتي'),
+  h('p',{},'لا نريد أن نعرف الأسماء فقط، بل أن نلمس أثرها في سلوكنا. بعد أن تؤدي مهمة الاسم، دوّن ما لاحظته في أسئلة قصيرة، ثم عُد إليها لاحقاً لترى ما بقي معك.'),
+  h('p',{style:'font-size:.95em;color:var(--muted)'},'تُحفظ كتاباتك على هذا الجهاز وفي هذا المتصفح فقط، ولا تُرسل إلى أي خادم. إن مسحت بيانات المتصفح أو غيّرت جهازك فلن تجدها، ولذلك نوفر زر «حفظ نسخة احتياطية».'),
+  h('p',{},h('a',{href:'athar.html',style:'color:var(--gold);font-weight:600'},'افتح رحلتي')));}
 function newsBlock(){const L=(window.NEWS||[]).slice().sort((a,b)=>b[0].localeCompare(a[0]));if(!L.length)return null;
   const row=r=>h('li',{},h('time',{datetime:r[0]},new Date(r[0]).toLocaleDateString('ar',{year:'numeric',month:'long',day:'numeric'})),h('b',{},r[1]),h('span',{},r[2]));
   return h('div',{class:'news'},h('h2',{},'ما الجديد'),h('ul',{},L.slice(0,6).map(row)),
