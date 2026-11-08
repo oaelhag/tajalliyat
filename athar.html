@@ -3,10 +3,13 @@
 <style>
 /* حالة المحتوى: معتمد من المالك (٨ نوفمبر ٢٠٢٦). */
 :root{--bg:#F1F2F5;--surface:#FFFFFF;--fg:#1B2338;--muted:#59627A;--gold:#9A6A18;--gold-soft:#F6EBD3;--lapis-soft:#E4E9F5;--rule:#D5D9E4;
---display:"Reem Kufi","Noto Naskh Arabic",system-ui,sans-serif;--body:"Noto Naskh Arabic","Amiri",serif;--ui:"IBM Plex Sans Arabic","Noto Naskh Arabic",system-ui,sans-serif}
+--display:"Reem Kufi","Noto Naskh Arabic",system-ui,sans-serif;--body:"IBM Plex Sans Arabic","Noto Naskh Arabic",system-ui,sans-serif;--ui:"IBM Plex Sans Arabic","Noto Naskh Arabic",system-ui,sans-serif}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0E1324;--surface:#171E36;--fg:#E9E6DD;--muted:#A9B3D0;--gold:#E3B45C;--gold-soft:#2A2A2E;--lapis-soft:#1B2547;--rule:#2B3453;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E1324;--surface:#171E36;--fg:#E9E6DD;--muted:#A9B3D0;--gold:#E3B45C;--gold-soft:#2A2A2E;--lapis-soft:#1B2547;--rule:#2B3453;color-scheme:dark}
+:root[data-theme="dark"] .btn.main,:root[data-theme="dark"] .btn[aria-pressed=true]{color:#0E1324}
+.err{color:#A32D2D}:root[data-theme="dark"] .err{color:#F0A49A}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:400 1.12rem/1.9 var(--body);padding-block:20px 56px;padding-inline:max(16px,env(safe-area-inset-left,0px))}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 1.1rem/1.95 var(--body);padding-block:20px 56px;padding-inline:max(16px,env(safe-area-inset-left,0px))}
 main{max-width:640px;margin-inline:auto;display:grid;gap:20px}
 h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
 h1{font-size:1.65rem;line-height:1.55}h2{font-size:1.3rem}h3{font-size:1.1rem}
@@ -20,8 +23,8 @@ textarea{min-height:84px;resize:vertical}
 select:focus-visible,textarea:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .btn{font:500 1rem/1.4 var(--ui);color:var(--fg);background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:10px 16px;min-height:44px;cursor:pointer}
 .btn:hover{border-color:var(--gold)}
-.btn.main{background:var(--gold);color:#fff;border-color:var(--gold)}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.main{color:#0E1324}}
+.btn.main,.btn[aria-pressed=true]{background:var(--gold);color:#fff;border-color:var(--gold)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.main,:root:not([data-theme="light"]) .btn[aria-pressed=true]{color:#0E1324}}
 .btn.quiet{border-color:transparent;color:var(--muted)}
 .row{display:flex;gap:8px;flex-wrap:wrap}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
@@ -42,7 +45,7 @@ nav{display:flex;gap:8px}
 <h1>أثر الاسم في حياتي</h1>
 <p class="lead">لا نريد أن نعرف الأسماء فقط، بل أن نلمس أثرها في سلوكنا. بعد أن تؤدي مهمة الاسم، دوّن ما لاحظته في أسئلة قصيرة، ثم عُد إليها لاحقاً لترى ما بقي معك.</p>
 <div class="note" role="note"><b>أين تُحفظ كتاباتك؟</b> على هذا الجهاز وفي هذا المتصفح فقط. لا نرسلها إلى أي خادم ولا نطّلع عليها. إن مسحت بيانات المتصفح أو انتقلت إلى جهاز آخر فلن تجدها، لذلك احفظ نسخة احتياطية من صفحة «رحلتي» بين حين وآخر.</div>
-<nav aria-label="الأقسام"><button class="btn main" id="tabNew" aria-pressed="true">أنجزت المهمة</button><button class="btn" id="tabJ">رحلتي</button></nav>
+<nav aria-label="الأقسام"><button class="btn" id="tabNew" aria-pressed="true">أنجزت المهمة</button><button class="btn" id="tabJ">رحلتي</button><button class="btn quiet" id="themeBtn" type="button" style="margin-inline-start:auto"></button></nav>
 
 <section id="viewNew" class="card" aria-labelledby="hNew">
 <h2 id="hNew">دوّن أثر المهمة</h2>
@@ -78,6 +81,13 @@ nav{display:flex;gap:8px}
 </main>
 <script src="data.js"></script>
 <script>
+(function(){var d=document.documentElement,b=document.getElementById('themeBtn');
+function cur(){return d.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
+function set(t,save){d.dataset.theme=t;b.textContent=t==='dark'?'☀ نهاري':'☾ ليلي';if(save){try{localStorage.setItem('theme',JSON.stringify(t))}catch(e){}}}
+var s=null;try{s=JSON.parse(localStorage.getItem('theme'))}catch(e){}
+set(s==='dark'||s==='light'?s:cur(),false);
+b.addEventListener('click',function(){set(cur()==='dark'?'light':'dark',true)})})();
+
 (function(){
 var KEY='tajalli_athar_v1',mem=[];
 var GROUPS=[['boy','طفل'],['girl','طفلة'],['youngman','شاب'],['youngwoman','شابة'],['father','أب'],['mother','أم']];
