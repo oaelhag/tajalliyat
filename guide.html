@@ -147,11 +147,11 @@ function result(s){
       h('button',{class:'btn',type:'button',onclick:stepFeelings},'شعور آخر'),
       h('a',{class:'btn',href:'https://oaelhag.github.io/tajalliyat/n/'+s.n+'/',target:'_blank',rel:'noopener'},'اقرأ عن الاسم')),
     status,
-    h('p',{class:'note'},'اختيار الأسماء لكل موقف اجتهاد للتأمل وليس فتوى ولا وعداً بنتيجة، والنص من بطاقات الأسماء المعتمدة.')));
+    h('p',{class:'note'},'اختيار الأسماء لكل موقف اجتهاد للتأمل وليس فتوى ولا وعداً بنتيجة، والنص مأخوذ من صفحات الأسماء في الموقع.')));
 }
 function allList(){
   const by={};D.sits.forEach(s=>(by[s.f]=by[s.f]||[]).push(s));
-  return h('details',{},h('summary',{},'كل المواقف في هذا النموذج ('+D.sits.length.toLocaleString('ar-EG')+')'),
+  return h('details',{},h('summary',{},'كل المواقف ('+D.sits.length.toLocaleString('ar-EG')+')'),
     h('div',{class:'all'},D.feels.map(f=>h('div',{},h('b',{},f.label),h('ul',{},by[f.id].map(s=>h('li',{},s.t,' ',h('em',{},'← '+D.names[s.n].plain))))))));
 }
 stepFeelings();

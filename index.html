@@ -235,7 +235,7 @@ body{transition:background .35s,color .35s}
   <section class="view" id="v-feel" hidden></section>
   <section class="view" id="v-videos" hidden></section>
 
-  <footer>محتوى تربوي مأخوذ من بطاقات «تجليات الأسماء»، ونصوص الآيات منقولة حرفياً من المصحف.<br>تطوير أسامة عبد الهادي الهاجري</footer>
+  <footer>محتوى تربوي للتأمل والتعلّم، ونصوص الآيات منقولة حرفياً من المصحف.<br>تطوير أسامة عبد الهادي الهاجري</footer>
 </div></main>
 
 <script src="data.js"></script>
@@ -340,7 +340,7 @@ function today(){
         h('div',{},h('h3',{},'مهمة صغيرة'),h('p',{},task)),
         h('div',{},h('h3',{},'المعنى في سطر'),h('p',{},g.simple))),
       h('div',{class:'actions'},h('a',{class:'btn',href:'#name-'+n.id},'افتح صفحة الاسم'),h('a',{class:'btn ghost',href:'#journey'},'تابع رحلتك')))
-    ,feelBar(),atharBlock(),newsBlock(),reminderBlock(),contactBlock(),namesGrid('الأسماء في هذه النسخة'));
+    ,feelBar(),atharBlock(),newsBlock(),reminderBlock(),contactBlock(),namesGrid('الأسماء'));
 }
 
 /* ── names ─────────────────────────────── */
@@ -348,7 +348,7 @@ function namesGrid(title){return h('div',{style:'display:grid;gap:14px'},h('h2',
   h('div',{class:'grid'},A.map(n=>h('a',{class:'card',href:'#name-'+n.id},h('span',{class:'n'},n.name),h('span',{class:'t'},n.tagline),VIDEOS[n.id]?h('span',{class:'v'},'فيه فيديو'):null))));}
 function names(){fill($('#v-names'),
   h('div',{class:'prose'},h('h1',{},'الأسماء'),
-    h('p',{class:'muted'},'لكل اسم معناه المبسّط والعميق، وآيته، وحديث يتصل به، ثم عشرة أسئلة للتأمل، وعشرون تجلياً من الحياة اليومية، وعشرون مهمة عملية على دورة كولب: تجربة، فتأمل، ففهم، فتطبيق. اختر لمن تقرأ من الأعلى، فيتغير المحتوى ليناسبه.')),
+    h('p',{class:'muted'},'لكل اسم معناه المبسّط والعميق، وآيته، وحديث يتصل به، ثم عشرة أسئلة للتأمل، وعشرون تجلياً من الحياة اليومية، وعشرون مهمة عملية تبدأ بالتجربة، ثم التأمل، ثم الفهم، ثم التطبيق. اختر لمن تقرأ من الأعلى، فيتغير المحتوى ليناسبه.')),
   namesGrid(arN(A.length)+' اسماً'));}
 
 let tab='tajalliyat';
@@ -357,9 +357,8 @@ function prodEl(id){const q=window.PROD&&PROD[id];if(!q)return null;
   return h('div',{style:'display:grid;gap:22px'},
     h('div',{class:'prose'},h('p',{class:'eyebrow'},'مقال التأمل'),h('h2',{},q.article.title),...q.article.paras.map(t=>h('p',{},t))),
     h('div',{class:'note'},h('b',{},'رسالة الأسبوع: '+q.message.title),h('p',{},q.message.open),h('p',{},q.message.tajalli),h('p',{},h('b',{},'سؤال: '),q.message.question),h('p',{},h('b',{},'مهمة: '),q.message.task)),
-    h('div',{style:'display:grid;gap:10px'},h('h3',{},'صور للمشاركة'),h('p',{class:'muted small'},'خمس شرائح وخلفية للجوال. اضغط على الصورة لفتحها وحفظها.'),
-      h('div',{class:'prodimgs'},imgs.map(u=>h('a',{href:u,target:'_blank',rel:'noopener',download:''},h('img',{src:u,loading:'lazy',alt:q.cover}))))),
-    h('details',{class:'sch'},h('summary',{},'جدول النشر · الأسبوع '+ar(q.week)),h('ul',{},q.schedule.map(r=>h('li',{},r[1]+' '+r[0]+' — '+r[2])))));}
+    h('div',{style:'display:grid;gap:10px'},h('h3',{},'صور للمشاركة'),h('p',{class:'muted small'},'خمس صور وخلفية للجوال. اضغط على الصورة لفتحها وحفظها.'),
+      h('div',{class:'prodimgs'},imgs.map(u=>h('a',{href:u,target:'_blank',rel:'noopener',download:''},h('img',{src:u,loading:'lazy',alt:q.cover}))))));}
 async function shareName(n){const url=SITE_URL+'n/'+n.id+'/',t=n.plain+' — '+n.tagline;if(navigator.share){try{await navigator.share({title:n.plain+' | تجليات الأسماء',text:t,url});return;}catch(e){if(e&&e.name==='AbortError')return;}}if(await copyText(t+'\n'+url))alert('تم نسخ رابط الصفحة');}
 function nameView(id){
   const n=byId[id];if(!n){location.hash='names';return;}
@@ -379,7 +378,7 @@ function nameView(id){
       h('div',{class:'prose'},h('h2',{},FOR[aud]),h('p',{},g.simple),h('p',{class:'muted'},g.deep))),
     VIDEOS[id]?h('div',{class:'split',style:'align-items:center'},
       h('video',{controls:'',preload:'none',playsinline:'',poster:`videos/${id}.jpg`,src:`videos/${id}.mp4`}),
-      h('div',{class:'prose'},h('p',{class:'eyebrow'},'فيديو قصير · ٤٤ ثانية'),h('h2',{},VIDEOS[id]),h('p',{class:'muted'},'مقطع عمودي جاهز للنشر على ريلز وشورتس. شاهده ثم شاركه مع من تحب.'))):null,
+      h('div',{class:'prose'},h('p',{class:'eyebrow'},'فيديو قصير · أقل من دقيقة'),h('h2',{},VIDEOS[id]),h('p',{class:'muted'},'شاهد المقطع، ثم شاركه مع من تحب.'))):null,
     h('div',{style:'display:grid;gap:14px'},
       h('div',{class:'tabs',role:'tablist'},tabBtn('tajalliyat','التجليات'),tabBtn('questions','أسئلة التأمل'),tabBtn('tasks','المهام العملية')),
       panels[tab]()),
@@ -495,17 +494,17 @@ async function saveIcs(t,msg){
 }
 async function signup(chv,c,t,msg){
   c=c.trim();if(c.length<5){msg.textContent='اكتب رقماً أو بريداً صحيحاً.';return;}
-  if(!remindDb){msg.textContent=window.claude?'التسجيل متاح للمسجّلين الذين أُعطوا صلاحية المشاركة في الصفحة. يمكنك استخدام تذكير التقويم الآن.':'التسجيل للرسائل يحتاج خادماً، وسيعمل في النسخة الكاملة. استخدم تذكير التقويم الآن.';return;}
+  if(!remindDb){msg.textContent=window.claude?'التسجيل للرسائل اليومية غير متاح الآن. استخدم تذكير التقويم.':'التسجيل للرسائل اليومية غير متاح الآن. استخدم تذكير التقويم.';return;}
   try{await remindDb.set({channel:chv,contact:c,time:t,aud,at:new Date().toISOString()});msg.textContent='سُجّلت. سيصلك التذكير حين تُطلق الخدمة، ولا يرى بياناتك إلا صاحب الموقع.';}
-  catch(e){msg.textContent='لا تملك صلاحية التسجيل في هذه النسخة. استخدم تذكير التقويم.';}
+  catch(e){msg.textContent='تعذّر التسجيل الآن. استخدم تذكير التقويم.';}
 }
 
 /* ── videos ─────────────────── */
 function videos(){fill($('#v-videos'),
-  h('div',{class:'prose'},h('h1',{},'فيديوهات قصيرة'),h('p',{class:'muted'},'كل مقطع ٤٤ ثانية، عمودي بمقاس ريلز وشورتس، يبدأ بسؤال يوقف المشاهد، ويصل إلى آية، ثم ينتهي بفعل واحد صغير.')),
+  h('div',{class:'prose'},h('h1',{},'فيديوهات قصيرة'),h('p',{class:'muted'},'مقاطع قصيرة، كل مقطع أقل من دقيقة: يبدأ بسؤال، ثم آية، وينتهي بعمل واحد صغير تفعله اليوم.')),
   h('div',{class:'vids'},Object.entries(VIDEOS).map(([id,t])=>h('figure',{},h('video',{controls:'',preload:'none',playsinline:'',poster:`videos/${id}.jpg`,src:`videos/${id}.mp4`}),
     h('figcaption',{},h('b',{},byId[id].plain),' · ',t)))),
-  h('p',{class:'muted small'},'فيديوهات بقية الأسماء تُصنع بالقالب نفسه.'));}
+  h('p',{class:'muted small'},'ستُضاف فيديوهات بقية الأسماء تباعاً.'));}
 
 /* ── feelings ──────────────────────────── */
 const F=window.FEEL||[];
