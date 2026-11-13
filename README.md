@@ -1,8 +1,10 @@
-# تجليات الأسماء
+# تجليات الأسماء — تأمّل أسماء الله الحسنى
 
-موقع هادئ يرافق القارئ في التعرّف على أسماء الله الحسنى، لا بالحفظ وحده، بل بالتأمل في أثر كل اسم في الحياة اليومية: في البيت، وفي العمل، وفي القلب حين يضيق أو يطمئن.
+موقع عربي هادئ للتعرّف على أسماء الله الحسنى ومعانيها وأثرها في الحياة اليومية، لا بالحفظ وحده بل بالتأمل: في البيت، وفي العمل، وفي القلب حين يضيق أو يطمئن. يناسب الطفل والطفلة والشاب والشابة والأب والأم.
 
 **الموقع:** https://oaelhag.github.io/tajalliyat/
+
+**روابط سريعة:** [اسم يناسب حالك](https://oaelhag.github.io/tajalliyat/guide.html) · [أثر الاسم في حياتي](https://oaelhag.github.io/tajalliyat/athar.html) · [خريطة الموقع](https://oaelhag.github.io/tajalliyat/sitemap.xml)
 
 > المشروع تربوي تأملي، وليس مرجعاً شرعياً. كل محتوى جديد يُعرض على مراجع شرعي قبل نشره، وما زال التحقق من أرقام الأحاديث قيد المراجعة.
 
@@ -34,6 +36,42 @@
 **مشاركة وطباعة.** رابط مستقل لكل اسم بمعاينة جميلة، وبطاقة صورة لكل آية ولتجلّي اليوم، ونسخ مباشر أو مشاركة عبر واتساب، وصفحات طباعة وملفات PDF لكل اسم وفئة.
 
 **واجهة مريحة.** عربية من اليمين إلى اليسار، بخطوط محلية، ووضع ليلي ونهاري، وانتقالات هادئة بين الأقسام.
+
+## الأسماء المنشورة (31)
+
+لكل اسم صفحة فيها المعنى والآيات والأحاديث الواردة فيه وأسئلة التأمل:
+
+- [الرحمن](https://oaelhag.github.io/tajalliyat/n/rahman/)
+- [اللطيف](https://oaelhag.github.io/tajalliyat/n/latif/)
+- [الودود](https://oaelhag.github.io/tajalliyat/n/wadud/)
+- [الشكور](https://oaelhag.github.io/tajalliyat/n/shakur/)
+- [التواب](https://oaelhag.github.io/tajalliyat/n/tawwab/)
+- [الحليم](https://oaelhag.github.io/tajalliyat/n/halim/)
+- [الولي](https://oaelhag.github.io/tajalliyat/n/wali/)
+- [الوكيل](https://oaelhag.github.io/tajalliyat/n/wakil/)
+- [الحكيم الخبير](https://oaelhag.github.io/tajalliyat/n/hakim/)
+- [الواحد القهار](https://oaelhag.github.io/tajalliyat/n/wahid/)
+- [العزيز الرحيم](https://oaelhag.github.io/tajalliyat/n/azizrahim/)
+- [السميع البصير](https://oaelhag.github.io/tajalliyat/n/samibasir/)
+- [العزيز الحكيم](https://oaelhag.github.io/tajalliyat/n/azizhakim/)
+- [الحي القيوم](https://oaelhag.github.io/tajalliyat/n/hayyqayyum/)
+- [الغني الحميد](https://oaelhag.github.io/tajalliyat/n/ghanihamid/)
+- [الغفور الرحيم](https://oaelhag.github.io/tajalliyat/n/ghafurrahim/)
+- [القوي](https://oaelhag.github.io/tajalliyat/n/qawi/)
+- [الرؤوف](https://oaelhag.github.io/tajalliyat/n/rauf/)
+- [البر](https://oaelhag.github.io/tajalliyat/n/barr/)
+- [الستير](https://oaelhag.github.io/tajalliyat/n/satir/)
+- [الحفيظ](https://oaelhag.github.io/tajalliyat/n/hafiz/)
+- [الصبور](https://oaelhag.github.io/tajalliyat/n/sabur/)
+- [الصمد](https://oaelhag.github.io/tajalliyat/n/samad/)
+- [الرزاق](https://oaelhag.github.io/tajalliyat/n/razzaq/)
+- [الجبار](https://oaelhag.github.io/tajalliyat/n/jabbar/)
+- [المهيمن](https://oaelhag.github.io/tajalliyat/n/muhaymin/)
+- [المحسن](https://oaelhag.github.io/tajalliyat/n/muhsin/)
+- [الملك](https://oaelhag.github.io/tajalliyat/n/malik/)
+- [الخالق](https://oaelhag.github.io/tajalliyat/n/khaliq/)
+- [القدوس](https://oaelhag.github.io/tajalliyat/n/quddus/)
+- [الحميد](https://oaelhag.github.io/tajalliyat/n/hamid/)
 
 ## ضوابط المحتوى
 
