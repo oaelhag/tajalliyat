@@ -147,7 +147,7 @@ for n in A:
     (d/'index.html').write_text(name_page(n,0),encoding='utf-8')
     for g in GL:(OUT/'print'/f"{n['id']}-{g}.html").write_text(print_page(n,g),encoding='utf-8')
 today=datetime.date.today().isoformat()
-urls=[BASE]+[f"{BASE}n/{n['id']}/" for n in A]
+urls=[BASE,BASE+'guide.html',BASE+'athar.html']+[f"{BASE}n/{n['id']}/" for n in A]
 (OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'<url><loc>{u}</loc><lastmod>{today}</lastmod></url>\n' for u in urls)+'</urlset>\n')
 (OUT/'robots.txt').write_text(f'User-agent: *\nAllow: /\nDisallow: /print/\nSitemap: {BASE}sitemap.xml\n')
 (OUT/'404.html').write_text(f'<!doctype html><meta charset=utf-8><meta http-equiv=refresh content="0;url={BASE}"><title>{SITE}</title><a href="{BASE}">{SITE}</a>')
