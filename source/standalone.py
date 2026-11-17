@@ -12,12 +12,12 @@ head = '''<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>تجليات الأسماء | تأمّل أسماء الله الحسنى</title>
-<meta name="description" content="تجلٍّ يومي وأسئلة تأمّل ورحلة ١٤٠ يوماً مع أسماء الله الحسنى، لست فئات: طفل، طفلة، شاب، شابة، أب، أم.">
+<meta name="description" content="تجلٍّ يومي وأسئلة تأمّل ورحلة متدرجة مع أسماء الله الحسنى، لست فئات: طفل، طفلة، شاب، شابة، أب، أم.">
 <link rel="canonical" href="https://oaelhag.github.io/tajalliyat/">
 <meta property="og:type" content="website"><meta property="og:locale" content="ar_AR">
 <meta property="og:site_name" content="تجليات الأسماء">
 <meta property="og:title" content="تجليات الأسماء">
-<meta property="og:description" content="تأمّل أسماء الله الحسنى: تجلٍّ يومي، أسئلة، ورحلة ١٤٠ يوماً.">
+<meta property="og:description" content="تأمّل أسماء الله الحسنى: تجلٍّ يومي، أسئلة، ورحلة متدرجة.">
 <meta property="og:url" content="https://oaelhag.github.io/tajalliyat/">
 <meta property="og:image" content="https://oaelhag.github.io/tajalliyat/og/default.jpg">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
