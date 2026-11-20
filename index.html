@@ -165,6 +165,9 @@ textarea{width:100%;min-height:96px;border:1px solid var(--rule);border-radius:1
 .athar p{font-family:var(--f-body);font-size:var(--fs-body);line-height:1.95;margin:0}
 .athar .small{font-size:var(--fs-ui);color:var(--ink-soft)}
 .athar a{font-family:var(--f-ui);color:var(--gold);font-weight:600}
+.books{display:grid;gap:10px;padding:16px 18px;border:1px solid var(--rule);border-radius:16px;background:var(--leaf)}
+.books p{font-family:var(--f-body);font-size:var(--fs-body);line-height:1.95;margin:0}
+.books a{font-family:var(--f-ui);color:var(--gold);font-weight:600}
 .fchips{display:flex;flex-wrap:wrap;gap:8px}
 .fchip{font-family:var(--f-ui);font-size:var(--fs-ui);border:1px solid var(--rule);background:var(--paper);padding:7px 15px;border-radius:999px;text-decoration:none;color:var(--ink)}
 .fchip[aria-current="page"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
@@ -346,7 +349,7 @@ function today(){
         h('div',{},h('h3',{},'مهمة صغيرة'),h('p',{},task)),
         h('div',{},h('h3',{},'المعنى في سطر'),h('p',{},g.simple))),
       h('div',{class:'actions'},h('a',{class:'btn',href:'#name-'+n.id},'افتح صفحة الاسم'),h('a',{class:'btn ghost',href:'#journey'},'تابع رحلتك')))
-    ,feelBar(),atharBlock(),newsBlock(),reminderBlock(),contactBlock(),namesGrid('الأسماء'));
+    ,feelBar(),atharBlock(),booksBlock(),newsBlock(),reminderBlock(),contactBlock(),namesGrid('الأسماء'));
 }
 
 /* ── names ─────────────────────────────── */
@@ -457,6 +460,9 @@ function atharBlock(){return h('div',{class:'athar'},h('h2',{},'أثر الاس�
   h('p',{},'لا نريد أن نعرف الأسماء فقط، بل أن نلمس أثرها في سلوكنا. بعد أن تؤدي مهمة الاسم، دوّن ما لاحظته في أسئلة قصيرة، ثم عُد إليها لاحقاً لترى ما بقي معك.'),
   h('p',{class:'small'},'تُحفظ كتاباتك على هذا الجهاز وفي هذا المتصفح فقط، ولا تُرسل إلى أي خادم. إن مسحت بيانات المتصفح أو غيّرت جهازك فلن تجدها، ولذلك نوفر زر «حفظ نسخة احتياطية».'),
   h('p',{},h('a',{href:'athar.html'},'افتح رحلتي')));}
+function booksBlock(){return h('div',{class:'books'},h('h2',{},'كتب مجانية'),
+  h('p',{},'دليل الشاب ودليل الأب: كتابان يمشيان مع أسماء الله الحسنى في مواقف الحياة. اقرأهما هنا ودوّن ما يخطر لك، أو نزّل الملف للقراءة أو الطباعة.'),
+  h('p',{},h('a',{href:'books/'},'افتح الكتب')));}
 function newsBlock(){const L=(window.NEWS||[]).slice().sort((a,b)=>b[0].localeCompare(a[0]));if(!L.length)return null;
   const row=r=>h('li',{},h('time',{datetime:r[0]},new Date(r[0]).toLocaleDateString('ar',{year:'numeric',month:'long',day:'numeric'})),h('b',{},r[1]),h('span',{},r[2]));
   return h('div',{class:'news'},h('h2',{},'ما الجديد'),h('ul',{},L.slice(0,6).map(row)),
