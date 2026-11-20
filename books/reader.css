@@ -122,3 +122,5 @@ td:first-child{font-weight:600;color:var(--d1);white-space:nowrap}
 @media(max-width:520px){.bk{grid-template-columns:100px 1fr;gap:12px}.hero h1{font-size:1.9rem}.chead h1{font-size:1.4rem}.badge{width:48px;height:48px;font-size:1.4rem}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 @media print{.bar,.drawer,.pop,.pn,.foot,.readbtn,#scrim{display:none!important}.art{display:block!important}}
+
+.box.real{background:color-mix(in srgb,#B07D2A 12%,var(--surface))}.box.real h3{background:#8A5F18}.box.real li{margin-bottom:.7rem}.box.real li::marker{color:#B07D2A}.here{color:#8A5F18}:root[data-theme="dark"] .box.real h3{color:#0F1A1F}:root[data-theme="dark"] .here{color:#E6BF72}

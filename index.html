@@ -461,7 +461,7 @@ function atharBlock(){return h('div',{class:'athar'},h('h2',{},'أثر الاس�
   h('p',{class:'small'},'تُحفظ كتاباتك على هذا الجهاز وفي هذا المتصفح فقط، ولا تُرسل إلى أي خادم. إن مسحت بيانات المتصفح أو غيّرت جهازك فلن تجدها، ولذلك نوفر زر «حفظ نسخة احتياطية».'),
   h('p',{},h('a',{href:'athar.html'},'افتح رحلتي')));}
 function booksBlock(){return h('div',{class:'books'},h('h2',{},'كتب مجانية'),
-  h('p',{},'دليل الشاب ودليل الأب: كتابان يمشيان مع أسماء الله الحسنى في مواقف الحياة. اقرأهما هنا ودوّن ما يخطر لك، أو نزّل الملف للقراءة أو الطباعة.'),
+  h('p',{},'دليل الشاب ودليل الأب ودليل الأم: ثلاثة كتب تمشي مع أسماء الله الحسنى في مواقف الحياة. اقرأها هنا ودوّن ما يخطر لك، أو نزّل الملف للقراءة أو الطباعة.'),
   h('p',{},h('a',{href:'books/'},'افتح الكتب')));}
 function newsBlock(){const L=(window.NEWS||[]).slice().sort((a,b)=>b[0].localeCompare(a[0]));if(!L.length)return null;
   const row=r=>h('li',{},h('time',{datetime:r[0]},new Date(r[0]).toLocaleDateString('ar',{year:'numeric',month:'long',day:'numeric'})),h('b',{},r[1]),h('span',{},r[2]));

@@ -8,6 +8,9 @@ BOOKS={
  'youth':dict(title='دليل الشاب',pdf='dalil-alshab',who='للشاب',
    desc='اثنان وأربعون اسماً من أسماء الله الحسنى في مواقف الحياة: الخوف والقرار والرزق والضعف والفقد والذنب والخلاف.',
    parts=[('أنا والقرار',[1,2,3],'أنا، وخوفي، وقراري'),('الرزق والضعف والضيق',[4,5,6],'العمل، والضعف، وضيق الحال'),('الفقد والصحبة والذنب',[7,8,9],'فقدٌ وصحبة وعودة'),('الخلاف والإحسان',[10,11],'ظلمٌ وغضب وبرّ')]),
+ 'mother':dict(title='دليل الأم',pdf='dalil-alom',who='للأم',
+   desc='اثنان وأربعون اسماً من أسماء الله الحسنى في مواقف البيت: الأولاد والرزق والقدوة والرجوع والتوكل والصبر والشكر، مع ثلاثة مواقف من الواقع لكل اسم.',
+   parts=[('البيت والأمانة',[1,2,3],'أولاد، وحضور، وغضب'),('الرزق والقدوة والقرار',[4,5,6],'البيت، والأدوار، والدعاء لهم'),('الرجوع والتوكل والصبر',[7,8,9],'رجوع، وسند، وصبر'),('البقاء والشكر',[10,11],'قربٌ وبقاءٌ وشكر')]),
  'father':dict(title='دليل الأب',pdf='dalil-alab',who='للأب',
    desc='اثنان وأربعون اسماً من أسماء الله الحسنى في مواقف البيت: الأولاد والرزق والغضب والقدوة والقلق والفقد والشكر.',
    parts=[('البيت والأمانة',[1,2,3],'أولاد، وحضور، وغضب'),('الرزق والقدوة والتربية',[4,5,6],'الرزق، والقدوة، والقرار والدعاء'),('العودة والقلق والضيق',[7,8,9],'اعتذار، وقلق، وضيق حال'),('الفقد والشكر',[10,11],'فقدٌ وشكر وختام')]),
@@ -26,11 +29,13 @@ def body_html(md,chnum=None):
         cls={'مدخل الفصل':'intro','مراجعة الفصل':'rev'}.get(x) or ('shid' if x.startswith('وقت الشدة') else 'nm')
         return f'<h2 class="{cls}">{x}</h2>'
     b=re.sub(r'<h2>(.+?)</h2>',h2,b)
-    cmap={'لاحِظ':'look','جرّب':'try','دوّن أثرك':'note','احفظ':'keep','المعنى':'mean'}
+    cmap={'لاحِظ':'look','جرّب':'try','دوّن أثرك':'note','احفظ':'keep','المعنى':'mean','لاحِظي':'look','جرّبي':'try','دوّني أثركِ':'note','احفظي':'keep','من الواقع':'real'}
     def sec(m):
         h,x=m.group(1),m.group(2); c=cmap.get(h.strip(),'stn')
         return f'<div class="box {c}"><h3>{h}</h3>{x}</div>'
     b=re.sub(r'<h3>(.+?)</h3>(.*?)(?=<h3>|<h2|<h1|$)',sec,b,flags=re.S)
+    b=b.replace(' ← <strong>الاسم هنا:</strong>','<br><strong class="here">الاسم هنا:</strong>')
+    b=re.sub(r'(<div class="box real">.*?)(<p><strong>السؤال:</strong>.*?</p>)(\s*</div>)',r'\1\3\2',b,flags=re.S)
     b=b.replace('<p><strong>في الموقع:</strong>','<p class="now"><strong>في الموقع:</strong>')
     b=b.replace('<p><strong>موقف:</strong>','<p class="scene"><strong>موقف:</strong>').replace('<p><strong>السؤال:</strong>','<p class="ask"><strong>السؤال:</strong>').replace('<p><strong>سؤال الفصل:</strong>','<p class="ask"><strong>سؤال الفصل:</strong>')
     for k,c in (('تجلٍّ ظاهر','s1'),('تجلٍّ خفي','s2'),('المقلوب','s3')):
@@ -54,13 +59,14 @@ def names_pass(b,bk):
         mid=re.search(r'<code>n/(\w+)/</code>',ch); nid=mid.group(1) if mid else None
         title=re.match(r'<h2 class="nm">(.+?)</h2>',ch).group(1)
         # ملاحظات: textarea
+        ntitle='دوّني أثركِ' if bk=='mother' else 'دوّن أثرك'
         def notes(m):
             lis=re.findall(r'<li>(.*?)</li>',m.group(0),flags=re.S)
             items=''.join(f'<div class="nq"><label for="t-{nid}-{i}">{i}. {q}</label><textarea id="t-{nid}-{i}" data-note="{nid}-{i}" data-q="{esc(re.sub("<[^>]+>","",q))}" data-name="{esc(re.sub("<[^>]+>","",title))}" rows="3" placeholder="اكتب هنا… (تُحفظ على جهازك فقط)"></textarea></div>' for i,q in enumerate(lis,1))
-            return f'<div class="box note"><h3>دوّن أثرك</h3>{items}<p class="small">تُحفظ كتابتك على هذا الجهاز وفي هذا المتصفح فقط، ولا تُرسل إلى أي خادم.</p></div>'
+            return f'<div class="box note"><h3>{ntitle}</h3>{items}<p class="small">تُحفظ كتابتك على هذا الجهاز وفي هذا المتصفح فقط، ولا تُرسل إلى أي خادم.</p></div>'
         ch=re.sub(r'<div class="box note">.*?</div>(?=\s*(?:<div class="box|$))',notes,ch,flags=re.S)
         # جرّب: خانة أنجزت
-        ch=re.sub(r'(<div class="box try"><h3>جرّب</h3>)(.*?)(</div>)',lambda m:f'{m.group(1)}{m.group(2)}<label class="done"><input type="checkbox" data-task="{nid}"> أنجزتُ مهمة هذا الأسبوع</label>{m.group(3)}',ch,flags=re.S)
+        ch=re.sub(r'(<div class="box try"><h3>جرّبي?</h3>)(.*?)(</div>)',lambda m:f'{m.group(1)}{m.group(2)}<label class="done"><input type="checkbox" data-task="{nid}"> أنجزتُ مهمة هذا الأسبوع</label>{m.group(3)}',ch,flags=re.S)
         # ما يُنقل: استبدله برابط صفحة الاسم
         def now(m):
             fm=re.search(r'يناسب من يشعر بـ: ([^.<]+)\.',m.group(0)); ft=f'يناسب من يشعر بـ: {fm.group(1)}.<br>' if fm else ''
@@ -147,11 +153,11 @@ def build_library():
     for bk,c in BOOKS.items():
         cards+=f'''<article class="bk"><a class="cv" href="{bk}/"><img src="img/cover-{bk}.jpg" alt="غلاف {c["title"]}" width="320" height="456" loading="lazy"></a><div class="bi"><h2><a href="{bk}/">{c["title"]}</a></h2><p>{c["desc"]}</p><p class="row"><a class="btn main" href="{bk}/">اقرأ هنا</a><a class="btn" href="pdf/{c["pdf"]}-screen.pdf" download>تنزيل PDF بالألوان</a><a class="btn" href="pdf/{c["pdf"]}-print.pdf" download>تنزيل PDF للطباعة</a></p><p class="small"><a href="pdf/{c["pdf"]}-screen.pdf" target="_blank" rel="noopener">فتح الـPDF في المتصفح</a></p></div></article>'''
     page=f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>كتب مجانية | تجليات الأسماء</title>
-<meta name="description" content="كتابان مجانيان من «تجليات الأسماء»: دليل الشاب ودليل الأب. اقرأهما هنا بنسخة تفاعلية تتيح لك التدوين، أو نزّل ملف PDF للقراءة أو الطباعة.">
+<meta name="description" content="ثلاثة كتب مجانية من «تجليات الأسماء»: دليل الشاب ودليل الأب ودليل الأم. اقرأها هنا بنسخة تفاعلية تتيح لك التدوين، أو نزّل ملف PDF للقراءة أو الطباعة.">
 <link rel="canonical" href="{SITE}/books/"><meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="تجليات الأسماء"><meta property="og:title" content="كتب مجانية | تجليات الأسماء"><meta property="og:image" content="{SITE}/books/img/cover-youth.jpg">
 <link rel="icon" href="data:,"><link rel="stylesheet" href="../assets/fonts/fonts.css"><link rel="stylesheet" href="reader.css"></head>
 <body class="lib"><header class="bar"><a class="bt" href="../"><b>تجليات الأسماء</b></a><span class="sp"></span></header>
-<main id="main"><h1>كتب مجانية</h1><p class="lead">كتابان يمشيان مع أسماء الله الحسنى في مواقف الحياة. في كل اسم معناه وآيته وحديثه، وموقف وأسئلة وخطوة صغيرة. اقرأ هنا، ودوّن ما يخطر لك (يُحفظ على جهازك فقط)، أو نزّل الملف.</p>{cards}
+<main id="main"><h1>كتب مجانية</h1><p class="lead">ثلاثة كتب تمشي مع أسماء الله الحسنى في مواقف الحياة. في كل اسم معناه وآيته وحديثه، وموقف وأسئلة وخطوة صغيرة. اقرأ هنا، ودوّن ما يخطر لك (يُحفظ على جهازك فقط)، أو نزّل الملف.</p>{cards}
 <p class="note">هذه الكتب للقراءة والتأمل، وليست مرجعاً شرعياً ولا طبياً ولا نفسياً. المطوّر: أسامة عبد الهادي الهاجري.</p></main>
 <footer class="foot"><p><a href="../">الموقع الرئيسي</a></p></footer></body></html>'''
     (ROOT/'books/index.html').write_text(page,encoding='utf-8')
