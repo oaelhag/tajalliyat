@@ -25,7 +25,7 @@ button,.btn{font:500 .95rem/1.4 var(--ui);color:var(--fg);background:var(--surfa
 .row{display:flex;gap:8px;flex-wrap:wrap}.col{display:grid;gap:8px}
 /* الشريط */
 .bar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:6px;padding:6px max(10px,env(safe-area-inset-left));background:var(--surface);border-bottom:1px solid var(--rule);min-height:52px}
-.bar .bt{font:700 1.05rem var(--display);text-decoration:none;color:var(--d1);padding:6px 8px}.sp{flex:1}
+.bar .bt{font:700 1.05rem var(--display);text-decoration:none;color:var(--d1);padding:6px 8px;min-height:44px;display:inline-flex;align-items:center}.sp{flex:1}
 .ibtn{min-width:44px;padding:6px 10px;font-size:1.2rem;border-color:transparent;background:transparent}
 .prog{position:absolute;inset-inline:0;bottom:-1px;height:3px;background:transparent}.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s;margin-inline-start:auto}
 /* القلب */
@@ -124,3 +124,6 @@ td:first-child{font-weight:600;color:var(--d1);white-space:nowrap}
 @media print{.bar,.drawer,.pop,.pn,.foot,.readbtn,#scrim{display:none!important}.art{display:block!important}}
 
 .box.real{background:color-mix(in srgb,#B07D2A 12%,var(--surface))}.box.real h3{background:#8A5F18}.box.real li{margin-bottom:.7rem}.box.real li::marker{color:#B07D2A}.here{color:#8A5F18}:root[data-theme="dark"] .box.real h3{color:#0F1A1F}:root[data-theme="dark"] .here{color:#E6BF72}
+.bk .small a{display:inline-flex;align-items:center;min-height:44px}
+td>a[href^="#c"]{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px}
+.bi h2 a{display:inline-block;padding-block:8px}

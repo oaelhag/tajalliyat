@@ -19,6 +19,7 @@ FONTS='''@font-face{font-family:Kufi;src:url(%(r)sassets/fonts/reem-kufi-arabic-
 @font-face{font-family:Naskh;src:url(%(r)sassets/fonts/noto-naskh-arabic-arabic-700-normal.woff2);font-weight:700}
 @font-face{font-family:Plex;src:url(%(r)sassets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2);font-weight:400}
 @font-face{font-family:Plex;src:url(%(r)sassets/fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2);font-weight:500}
+@font-face{font-family:Plex;src:url(%(r)sassets/fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2);font-weight:600}
 @font-face{font-family:Quran;src:url(%(r)sassets/fonts/amiri-quran-arabic-400-normal.woff2)}'''
 STAR='<svg class="star" viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2"><rect x="14" y="14" width="36" height="36"/><rect x="14" y="14" width="36" height="36" transform="rotate(45 32 32)"/></g></svg>'
 
@@ -27,8 +28,8 @@ def name_page(n,idx):
     title=f"{n['plain']} — معناه وتجلياته وأسئلة التأمل | {SITE}"
     desc=cut(f"{n['tagline']}. {n['simple']}",155)
     ay=n['ayah']
-    others=''.join(f"<li><span class='q'>{e(x['text'])}</span> <small>﴿{e(x['surah'])}: {e(x['num'])}﴾</small></li>" for x in n['ayat'] if x['ref']!=ay['ref'])
-    had=''.join(f"<li>{e(h['text'])}<small>{e(h['src'])}</small></li>" for h in n['hadith'])
+    others=''.join(f"<div class='box ay sm'>{e(x['text'])}<small>﴿{e(x['surah'])}: {e(x['num'])}﴾</small></div>" for x in n['ayat'] if x['ref']!=ay['ref'])
+    had=''.join(f"<blockquote class='had'>{e(h['text'])}<small>{e(h['src'])}</small></blockquote>" for h in n['hadith'])
     prints=''.join(f"<a href='../../print/{pid}-{k}.html'>{v}</a>" for k,v in GL.items())
     chips=''.join(f"<a href='../{m['id']}/'{' aria-current=page' if m['id']==pid else ''}>{e(m['plain'])}</a>" for m in A)
     ld=json.dumps({'@context':'https://schema.org','@type':'Article','headline':title,'description':desc,'inLanguage':'ar','url':url,'image':f'{BASE}og/{pid}.jpg','publisher':{'@type':'Organization','name':SITE},'isPartOf':{'@type':'WebSite','name':SITE,'url':BASE}},ensure_ascii=False)
@@ -47,31 +48,31 @@ def name_page(n,idx):
 <meta name="theme-color" content="#0E1324">
 <script type="application/ld+json">{ld}</script>
 <style>{FONTS % {'r':'../../'}}
-:root{{--bg:#F1F2F5;--ink:#1B2338;--gold:#A8761E;--card:#fff;--line:#d9dce4}}
-@media(prefers-color-scheme:dark){{:root{{--bg:#0E1324;--ink:#E9E6DD;--gold:#E3B45C;--card:#161d33;--line:#2a3350}}}}
-*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font:400 18px/1.9 Naskh,serif}}
+:root{{--bg:#F1F2F5;--ink:#1B2338;--gold:#A8761E;--gt:#8F600F;--on:#fff;--card:#fff;--line:#d9dce4}}
+@media(prefers-color-scheme:dark){{:root{{--bg:#0E1324;--ink:#E9E6DD;--gold:#E3B45C;--gt:#E3B45C;--on:#0E1324;--card:#161d33;--line:#2a3350}}}}
+*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font:400 18px/1.95 Plex,Naskh,serif}}
 main{{max-width:760px;margin:0 auto;padding:28px 18px 60px}}
-.hero{{text-align:center;padding:30px 0 10px;color:var(--gold)}}.star{{width:44px;height:44px}}
-.kick{{font:500 14px Plex;letter-spacing:.04em;color:var(--ink);opacity:.65;margin-top:6px}}
+.hero{{text-align:center;padding:30px 0 10px;color:var(--gt)}}.hero h1{{color:var(--gold)}}.star{{width:44px;height:44px}}
+.kick{{font:500 14px Plex;letter-spacing:.04em;color:var(--ink);opacity:.75;margin-top:6px}}
 h1{{font:700 clamp(54px,14vw,96px)/1.2 Kufi;margin:6px 0 0;color:var(--gold)}}
-.tag{{font:600 21px/1.7 Naskh;margin:6px 0 0}}
-h2{{font:700 20px Kufi;color:var(--gold);margin:30px 0 6px}}
+.tag{{font:600 21px/1.7 Plex;margin:6px 0 0}}
+h2{{font:600 22px/1.5 Plex;color:var(--gt);margin:30px 0 8px}}
 .box{{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}}
-.ay{{font:400 28px/2.1 Quran;text-align:center}}.ay small{{display:block;font:500 14px Plex;opacity:.65}}
-ul{{padding:0 20px;margin:0}}li{{margin:8px 0}}li small{{display:block;font:400 14px Plex;opacity:.65}}.q{{font-family:Quran;font-size:22px}}
+.ay{{font:400 28px/2.1 Quran;text-align:center}}.ay small{{display:block;font:500 14px Plex;opacity:.75}}.ay.sm{{font-size:24px}}.stack{{display:grid;gap:10px}}.had{{margin:0 0 14px;border-inline-start:3px solid var(--gold);padding-inline-start:14px}}.had small{{display:block;font:400 14px Plex;opacity:.75}}
+ul{{padding:0 20px;margin:0}}li{{margin:8px 0}}li small{{display:block;font:400 14px Plex;opacity:.75}}.q{{font-family:Quran;font-size:22px}}
 .cta{{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 0;justify-content:center}}
-.btn{{background:var(--gold);color:#fff;text-decoration:none;padding:11px 20px;border-radius:999px;font:600 16px Naskh}}
-.btn.g{{background:none;color:var(--gold);border:1.5px solid var(--gold)}}
-.row{{display:flex;gap:8px;flex-wrap:wrap}}.row a{{border:1px solid var(--line);color:var(--ink);text-decoration:none;padding:4px 14px;border-radius:999px;font:500 15px Plex;background:var(--card)}}
-.row a[aria-current]{{background:var(--gold);color:#fff;border-color:var(--gold)}}
-footer{{text-align:center;font:400 13px Plex;opacity:.6;margin-top:34px}}
+.btn{{background:var(--gt);color:var(--on);text-decoration:none;padding:11px 20px;min-height:44px;display:inline-flex;align-items:center;border-radius:999px;font:600 16px Plex}}
+.btn.g{{background:none;color:var(--gt);border:1.5px solid var(--gt)}}
+.row{{display:flex;gap:8px;flex-wrap:wrap}}.row a{{border:1px solid var(--line);color:var(--ink);text-decoration:none;padding:4px 14px;min-height:44px;min-width:44px;justify-content:center;display:inline-flex;align-items:center;border-radius:999px;font:500 15px Plex;background:var(--card)}}
+.row a[aria-current]{{background:var(--gt);color:var(--on);border-color:var(--gt)}}a:focus-visible{{outline:2px solid var(--gt);outline-offset:3px;border-radius:6px}}
+footer{{text-align:center;font:400 14px Plex;opacity:.75;margin-top:34px}}
 </style></head><body><main>
 <header class="hero">{STAR}<div class="kick">{SITE} · اسم من أسماء الله الحسنى</div><h1>{e(n['name'])}</h1><p class="tag">{e(n['tagline'])}</p></header>
 <section><h2>المعنى</h2><div class="box"><p style="margin:0">{e(n['simple'])}</p></div></section>
 <section><h2>آية الاسم</h2><div class="box ay">{e(ay['text'])}<small>﴿{e(ay['surah'])}: {e(ay['num'])}﴾</small></div></section>
 <section><h2>المعنى العميق</h2><p>{e(n['deep'])}</p></section>
-{('<section><h2>آيات أخرى</h2><ul>'+others+'</ul></section>') if others else ''}
-{('<section><h2>من السنة</h2><ul>'+had+'</ul></section>') if had else ''}
+{('<section><h2>آيات أخرى</h2><div class="stack">'+others+'</div></section>') if others else ''}
+{('<section><h2>من السنة</h2>'+had+'</section>') if had else ''}
 <div class="cta"><a class="btn" href="../../#name-{pid}">افتح التجربة الكاملة للاسم</a><a class="btn g" href="../../#feel">قلبي الآن</a></div>
 <section><h2>اطبع الاسم بمعناه وأسئلته وتجلياته (PDF)</h2><div class="row">{prints}</div></section>
 <section><h2>أسماء أخرى</h2><div class="row">{chips}</div></section>

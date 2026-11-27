@@ -19,32 +19,33 @@
 @font-face{font-family:Naskh;src:url(../../assets/fonts/noto-naskh-arabic-arabic-700-normal.woff2);font-weight:700}
 @font-face{font-family:Plex;src:url(../../assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2);font-weight:400}
 @font-face{font-family:Plex;src:url(../../assets/fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2);font-weight:500}
+@font-face{font-family:Plex;src:url(../../assets/fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2);font-weight:600}
 @font-face{font-family:Quran;src:url(../../assets/fonts/amiri-quran-arabic-400-normal.woff2)}
-:root{--bg:#F1F2F5;--ink:#1B2338;--gold:#A8761E;--card:#fff;--line:#d9dce4}
-@media(prefers-color-scheme:dark){:root{--bg:#0E1324;--ink:#E9E6DD;--gold:#E3B45C;--card:#161d33;--line:#2a3350}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:400 18px/1.9 Naskh,serif}
+:root{--bg:#F1F2F5;--ink:#1B2338;--gold:#A8761E;--gt:#8F600F;--on:#fff;--card:#fff;--line:#d9dce4}
+@media(prefers-color-scheme:dark){:root{--bg:#0E1324;--ink:#E9E6DD;--gold:#E3B45C;--gt:#E3B45C;--on:#0E1324;--card:#161d33;--line:#2a3350}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:400 18px/1.95 Plex,Naskh,serif}
 main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
-.hero{text-align:center;padding:30px 0 10px;color:var(--gold)}.star{width:44px;height:44px}
-.kick{font:500 14px Plex;letter-spacing:.04em;color:var(--ink);opacity:.65;margin-top:6px}
+.hero{text-align:center;padding:30px 0 10px;color:var(--gt)}.hero h1{color:var(--gold)}.star{width:44px;height:44px}
+.kick{font:500 14px Plex;letter-spacing:.04em;color:var(--ink);opacity:.75;margin-top:6px}
 h1{font:700 clamp(54px,14vw,96px)/1.2 Kufi;margin:6px 0 0;color:var(--gold)}
-.tag{font:600 21px/1.7 Naskh;margin:6px 0 0}
-h2{font:700 20px Kufi;color:var(--gold);margin:30px 0 6px}
+.tag{font:600 21px/1.7 Plex;margin:6px 0 0}
+h2{font:600 22px/1.5 Plex;color:var(--gt);margin:30px 0 8px}
 .box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
-.ay{font:400 28px/2.1 Quran;text-align:center}.ay small{display:block;font:500 14px Plex;opacity:.65}
-ul{padding:0 20px;margin:0}li{margin:8px 0}li small{display:block;font:400 14px Plex;opacity:.65}.q{font-family:Quran;font-size:22px}
+.ay{font:400 28px/2.1 Quran;text-align:center}.ay small{display:block;font:500 14px Plex;opacity:.75}.ay.sm{font-size:24px}.stack{display:grid;gap:10px}.had{margin:0 0 14px;border-inline-start:3px solid var(--gold);padding-inline-start:14px}.had small{display:block;font:400 14px Plex;opacity:.75}
+ul{padding:0 20px;margin:0}li{margin:8px 0}li small{display:block;font:400 14px Plex;opacity:.75}.q{font-family:Quran;font-size:22px}
 .cta{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 0;justify-content:center}
-.btn{background:var(--gold);color:#fff;text-decoration:none;padding:11px 20px;border-radius:999px;font:600 16px Naskh}
-.btn.g{background:none;color:var(--gold);border:1.5px solid var(--gold)}
-.row{display:flex;gap:8px;flex-wrap:wrap}.row a{border:1px solid var(--line);color:var(--ink);text-decoration:none;padding:4px 14px;border-radius:999px;font:500 15px Plex;background:var(--card)}
-.row a[aria-current]{background:var(--gold);color:#fff;border-color:var(--gold)}
-footer{text-align:center;font:400 13px Plex;opacity:.6;margin-top:34px}
+.btn{background:var(--gt);color:var(--on);text-decoration:none;padding:11px 20px;min-height:44px;display:inline-flex;align-items:center;border-radius:999px;font:600 16px Plex}
+.btn.g{background:none;color:var(--gt);border:1.5px solid var(--gt)}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row a{border:1px solid var(--line);color:var(--ink);text-decoration:none;padding:4px 14px;min-height:44px;min-width:44px;justify-content:center;display:inline-flex;align-items:center;border-radius:999px;font:500 15px Plex;background:var(--card)}
+.row a[aria-current]{background:var(--gt);color:var(--on);border-color:var(--gt)}a:focus-visible{outline:2px solid var(--gt);outline-offset:3px;border-radius:6px}
+footer{text-align:center;font:400 14px Plex;opacity:.75;margin-top:34px}
 </style></head><body><main>
 <header class="hero"><svg class="star" viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2"><rect x="14" y="14" width="36" height="36"/><rect x="14" y="14" width="36" height="36" transform="rotate(45 32 32)"/></g></svg><div class="kick">تجليات الأسماء · اسم من أسماء الله الحسنى</div><h1>العَفُوّ</h1><p class="tag">يتجاوز عن التقصير، ويحب أن تتجاوز عن الناس</p></header>
 <section><h2>المعنى</h2><div class="box"><p style="margin:0">العفو: الذي يتجاوز عن عباده ويمحو أثر تقصيرهم، فلا يعاقب على كل ما يستحق عليه العقوبة.</p></div></section>
 <section><h2>آية الاسم</h2><div class="box ay">إِن تُبۡدُواْ خَيۡرًا أَوۡ تُخۡفُوهُ أَوۡ تَعۡفُواْ عَن سُوٓءࣲ فَإِنَّ ٱللَّهَ كَانَ عَفُوࣰّا قَدِيرًا<small>﴿النساء: 149﴾</small></div></section>
 <section><h2>المعنى العميق</h2><p>العفو من «عفا الأثر» أي محاه. والله واسع العفو، يحب العفو، ويحب أن يتصف به عباده. وقد علّمنا النبي ﷺ أن ندعوه به في ليلة القدر، وبيّن أن من عفا عن الناس زاده الله عزاً. والعفو لا يعني ترك الحقوق ولا ترك التربية، بل ترك الانتقام وتخفيف ثقل القلب. ومن أدب طلب العفو أن يُقرّ العبد بتقصيره بينه وبين ربه في دعائه وقيامه وسجوده، بأدعية ثابتة، دون أن يفصّل ذنبه لأحد.</p></section>
-<section><h2>آيات أخرى</h2><ul><li><span class='q'>إِنَّ ٱللَّهَ لَعَفُوٌّ غَفُورࣱ</span> <small>﴿الحج: 60﴾</small></li><li><span class='q'>عَسَى ٱللَّهُ أَن يَعۡفُوَ عَنۡهُمۡۚ وَكَانَ ٱللَّهُ عَفُوًّا غَفُورࣰا</span> <small>﴿النساء: 99﴾</small></li><li><span class='q'>وَلۡيَعۡفُواْ وَلۡيَصۡفَحُوٓاْۗ أَلَا تُحِبُّونَ أَن يَغۡفِرَ ٱللَّهُ لَكُمۡۚ</span> <small>﴿النور: 22﴾</small></li><li><span class='q'>وَٱلۡكَٰظِمِينَ ٱلۡغَيۡظَ وَٱلۡعَافِينَ عَنِ ٱلنَّاسِۗ</span> <small>﴿آل عمران: 134﴾</small></li></ul></section>
-<section><h2>من السنة</h2><ul><li>اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك علي، وأبوء بذنبي، فاغفر لي فإنه لا يغفر الذنوب إلا أنت<small>سيد الاستغفار، رواه البخاري (6306)</small></li><li>اللهم اغفر لي ذنبي كله، دقه وجله، وأوله وآخره، وعلانيته وسره<small>من دعاء السجود، رواه مسلم (483)</small></li><li>اللهم إنك عفو تحب العفو فاعف عني<small>رواه ابن ماجه (3850)، ورواه الترمذي (3513) بزيادة «كريم»</small></li><li>ما نقصت صدقة من مال، وما زاد الله عبداً بعفو إلا عزاً، وما تواضع أحد لله إلا رفعه الله<small>رواه مسلم (2588)</small></li></ul></section>
+<section><h2>آيات أخرى</h2><div class="stack"><div class='box ay sm'>إِنَّ ٱللَّهَ لَعَفُوٌّ غَفُورࣱ<small>﴿الحج: 60﴾</small></div><div class='box ay sm'>عَسَى ٱللَّهُ أَن يَعۡفُوَ عَنۡهُمۡۚ وَكَانَ ٱللَّهُ عَفُوًّا غَفُورࣰا<small>﴿النساء: 99﴾</small></div><div class='box ay sm'>وَلۡيَعۡفُواْ وَلۡيَصۡفَحُوٓاْۗ أَلَا تُحِبُّونَ أَن يَغۡفِرَ ٱللَّهُ لَكُمۡۚ<small>﴿النور: 22﴾</small></div><div class='box ay sm'>وَٱلۡكَٰظِمِينَ ٱلۡغَيۡظَ وَٱلۡعَافِينَ عَنِ ٱلنَّاسِۗ<small>﴿آل عمران: 134﴾</small></div></div></section>
+<section><h2>من السنة</h2><blockquote class='had'>اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك علي، وأبوء بذنبي، فاغفر لي فإنه لا يغفر الذنوب إلا أنت<small>سيد الاستغفار، رواه البخاري (6306)</small></blockquote><blockquote class='had'>اللهم اغفر لي ذنبي كله، دقه وجله، وأوله وآخره، وعلانيته وسره<small>من دعاء السجود، رواه مسلم (483)</small></blockquote><blockquote class='had'>اللهم إنك عفو تحب العفو فاعف عني<small>رواه ابن ماجه (3850)، ورواه الترمذي (3513) بزيادة «كريم»</small></blockquote><blockquote class='had'>ما نقصت صدقة من مال، وما زاد الله عبداً بعفو إلا عزاً، وما تواضع أحد لله إلا رفعه الله<small>رواه مسلم (2588)</small></blockquote></section>
 <div class="cta"><a class="btn" href="../../#name-afuw">افتح التجربة الكاملة للاسم</a><a class="btn g" href="../../#feel">قلبي الآن</a></div>
 <section><h2>اطبع الاسم بمعناه وأسئلته وتجلياته (PDF)</h2><div class="row"><a href='../../print/afuw-boy.html'>طفل</a><a href='../../print/afuw-girl.html'>طفلة</a><a href='../../print/afuw-youngman.html'>شاب</a><a href='../../print/afuw-youngwoman.html'>شابة</a><a href='../../print/afuw-father.html'>أب</a><a href='../../print/afuw-mother.html'>أم</a></div></section>
 <section><h2>أسماء أخرى</h2><div class="row"><a href='../rahman/'>الرحمن</a><a href='../latif/'>اللطيف</a><a href='../wadud/'>الودود</a><a href='../shakur/'>الشكور</a><a href='../tawwab/'>التواب</a><a href='../halim/'>الحليم</a><a href='../wali/'>الولي</a><a href='../wakil/'>الوكيل</a><a href='../hakim/'>الحكيم الخبير</a><a href='../wahid/'>الواحد القهار</a><a href='../azizrahim/'>العزيز الرحيم</a><a href='../samibasir/'>السميع البصير</a><a href='../azizhakim/'>العزيز الحكيم</a><a href='../hayyqayyum/'>الحي القيوم</a><a href='../ghanihamid/'>الغني الحميد</a><a href='../ghafurrahim/'>الغفور الرحيم</a><a href='../qawi/'>القوي</a><a href='../rauf/'>الرؤوف</a><a href='../barr/'>البر</a><a href='../satir/'>الستير</a><a href='../hafiz/'>الحفيظ</a><a href='../sabur/'>الصبور</a><a href='../samad/'>الصمد</a><a href='../razzaq/'>الرزاق</a><a href='../jabbar/'>الجبار</a><a href='../muhaymin/'>المهيمن</a><a href='../muhsin/'>المحسن</a><a href='../malik/'>الملك</a><a href='../khaliq/'>الخالق</a><a href='../quddus/'>القدوس</a><a href='../hamid/'>الحميد</a><a href='../wahhab/'>الوهاب</a><a href='../afuw/' aria-current=page>العفو</a><a href='../karim/'>الكريم</a><a href='../mujib/'>المجيب</a><a href='../shafi/'>الشافي</a><a href='../qarib/'>القريب</a><a href='../fattah/'>الفتاح</a><a href='../nasir/'>النصير</a><a href='../wasi/'>الواسع</a><a href='../baqi/'>الباقي</a><a href='../warith/'>الوارث</a></div></section>
