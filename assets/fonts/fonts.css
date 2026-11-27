@@ -1,0 +1,10 @@
+/* خطوط الموقع محلية: لا طلب إلى Google. */
+@font-face{font-family:"IBM Plex Sans Arabic";font-style:normal;font-weight:400;font-display:swap;src:url(ibm-plex-sans-arabic-arabic-400-normal.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans Arabic";font-style:normal;font-weight:500;font-display:swap;src:url(ibm-plex-sans-arabic-arabic-500-normal.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans Arabic";font-style:normal;font-weight:600;font-display:swap;src:url(ibm-plex-sans-arabic-arabic-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Noto Naskh Arabic";font-style:normal;font-weight:400;font-display:swap;src:url(noto-naskh-arabic-arabic-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Noto Naskh Arabic";font-style:normal;font-weight:600;font-display:swap;src:url(noto-naskh-arabic-arabic-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Noto Naskh Arabic";font-style:normal;font-weight:700;font-display:swap;src:url(noto-naskh-arabic-arabic-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Reem Kufi";font-style:normal;font-weight:500;font-display:swap;src:url(reem-kufi-arabic-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Reem Kufi";font-style:normal;font-weight:700;font-display:swap;src:url(reem-kufi-arabic-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Amiri Quran";font-style:normal;font-weight:400;font-display:swap;src:url(amiri-quran-arabic-400-normal.woff2) format("woff2")}
