@@ -21,6 +21,8 @@ else
 fi
 rm -f "$OUT/_img_jobs.json"
 python3 -I "$(dirname "$0")/gen_seo.py" "$OUT" check
+# إزالة اسم المطوّر من كل الملفات (نصوص وPDF) مع التحقق
+python3 "$(dirname "$0")/scrub_developer.py" "$OUT"
 # 404 حقيقية: صفحة بمحتوى وروابط و noindex بدل التحويل التلقائي (يعدّه جوجل soft-404)
 cat > "$OUT/404.html" <<'EOT'
 <!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>الصفحة غير موجودة | تجليات الأسماء</title><style>body{font-family:system-ui,sans-serif;text-align:center;padding:4rem 1rem;line-height:2}a{color:#0b6b5c}</style></head><body><h1>الصفحة غير موجودة</h1><p>ربما تغيّر الرابط أو كُتب خطأ.</p><p><a href="/">الصفحة الرئيسية</a> · <a href="/guide.html">اسم يناسب حالك</a> · <a href="/books/">الكتب المجانية</a></p></body></html>
