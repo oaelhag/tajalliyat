@@ -221,6 +221,19 @@ body{transition:background .35s,color .35s}
  nav{position:fixed;inset:auto 0 0 0;z-index:6;margin:0;gap:0;display:grid;grid-template-columns:repeat(5,1fr);background:var(--paper);border-top:1px solid var(--rule);direction:rtl;padding:4px max(6px,env(safe-area-inset-right,0px)) calc(4px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px))}
  nav a{display:flex;align-items:center;justify-content:center;min-height:48px;padding:0 2px;font-size:var(--fs-cap);text-align:center;border-radius:10px;box-sizing:border-box}
 }
+.qsearch{width:100%;min-height:44px;border:1px solid var(--rule);background:var(--leaf);border-radius:999px;padding:8px 18px;font-family:var(--f-ui);font-size:var(--fs-ui);color:var(--ink)}
+.qsearch::placeholder{color:var(--ink-soft)}
+.card[hidden]{display:none}
+.today > p{max-width:38em}
+@media (max-width:640px){
+ .aud{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;-webkit-overflow-scrolling:touch}
+ .aud::-webkit-scrollbar{display:none}
+ .aud .chip,.aud .lbl{flex:none}
+ .grid.compact{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .grid.compact .card{padding:14px}
+ .grid.compact .card .n{font-size:var(--fs-h3)}
+ .grid.compact .card .t{font-size:var(--fs-cap);line-height:1.6}
+}
 .sitenames{margin:40px 0 8px;padding-top:22px;border-top:1px solid var(--rule)}.sitenames summary{cursor:pointer;font-family:var(--f-ui);font-size:var(--fs-ui);color:var(--ink-soft);padding:6px 0}.sitenames p{margin:8px 0 12px;color:var(--ink-soft);font-size:var(--fs-ui)}.sitenames div{display:flex;flex-wrap:wrap;gap:8px 10px}.sitenames a{font-family:var(--f-ui);font-size:var(--fs-ui);color:var(--ink-soft);text-decoration:none;padding:4px 10px;border:1px solid var(--rule);border-radius:999px}.sitenames a:hover{color:var(--ink)}
 </style>
 
@@ -242,7 +255,7 @@ body{transition:background .35s,color .35s}
   <section class="view" id="v-feel" hidden></section>
   <section class="view" id="v-videos" hidden></section>
 
-  <details class="sitenames"><summary>أسماء الله الحسنى في الموقع (31)</summary><p>اضغط على أي اسم لتفتح صفحته داخل الموقع.</p><div><a href="#name-rahman">الرحمن</a><a href="#name-latif">اللطيف</a><a href="#name-wadud">الودود</a><a href="#name-shakur">الشكور</a><a href="#name-tawwab">التواب</a><a href="#name-halim">الحليم</a><a href="#name-wali">الولي</a><a href="#name-wakil">الوكيل</a><a href="#name-hakim">الحكيم الخبير</a><a href="#name-wahid">الواحد القهار</a><a href="#name-azizrahim">العزيز الرحيم</a><a href="#name-samibasir">السميع البصير</a><a href="#name-azizhakim">العزيز الحكيم</a><a href="#name-hayyqayyum">الحي القيوم</a><a href="#name-ghanihamid">الغني الحميد</a><a href="#name-ghafurrahim">الغفور الرحيم</a><a href="#name-qawi">القوي</a><a href="#name-rauf">الرؤوف</a><a href="#name-barr">البر</a><a href="#name-satir">الستير</a><a href="#name-hafiz">الحفيظ</a><a href="#name-sabur">الصبور</a><a href="#name-samad">الصمد</a><a href="#name-razzaq">الرزاق</a><a href="#name-jabbar">الجبار</a><a href="#name-muhaymin">المهيمن</a><a href="#name-muhsin">المحسن</a><a href="#name-malik">الملك</a><a href="#name-khaliq">الخالق</a><a href="#name-quddus">القدوس</a><a href="#name-hamid">الحميد</a></div></details>
+  <details class="sitenames"><summary>أسماء الله الحسنى في الموقع (٤٢)</summary><p>اضغط على أي اسم لتفتح صفحته داخل الموقع.</p><div><a href="#name-rahman">الرحمن</a><a href="#name-latif">اللطيف</a><a href="#name-wadud">الودود</a><a href="#name-shakur">الشكور</a><a href="#name-tawwab">التواب</a><a href="#name-halim">الحليم</a><a href="#name-wali">الولي</a><a href="#name-wakil">الوكيل</a><a href="#name-hakim">الحكيم الخبير</a><a href="#name-wahid">الواحد القهار</a><a href="#name-azizrahim">العزيز الرحيم</a><a href="#name-samibasir">السميع البصير</a><a href="#name-azizhakim">العزيز الحكيم</a><a href="#name-hayyqayyum">الحي القيوم</a><a href="#name-ghanihamid">الغني الحميد</a><a href="#name-ghafurrahim">الغفور الرحيم</a><a href="#name-qawi">القوي</a><a href="#name-rauf">الرؤوف</a><a href="#name-barr">البر</a><a href="#name-satir">الستير</a><a href="#name-hafiz">الحفيظ</a><a href="#name-sabur">الصبور</a><a href="#name-samad">الصمد</a><a href="#name-razzaq">الرزاق</a><a href="#name-jabbar">الجبار</a><a href="#name-muhaymin">المهيمن</a><a href="#name-muhsin">المحسن</a><a href="#name-malik">الملك</a><a href="#name-khaliq">الخالق</a><a href="#name-quddus">القدوس</a><a href="#name-hamid">الحميد</a><a href="#name-wahhab">الوهاب</a><a href="#name-afuw">العفو</a><a href="#name-karim">الكريم</a><a href="#name-mujib">المجيب</a><a href="#name-shafi">الشافي</a><a href="#name-qarib">القريب</a><a href="#name-fattah">الفتاح</a><a href="#name-nasir">النصير</a><a href="#name-wasi">الواسع</a><a href="#name-baqi">الباقي</a><a href="#name-warith">الوارث</a></div></details>
 
   <footer>محتوى تربوي للتأمل والتعلّم، ونصوص الآيات منقولة حرفياً من المصحف.<br>تطوير أسامة عبد الهادي الهاجري</footer>
 </div></main>
@@ -353,8 +366,12 @@ function today(){
 }
 
 /* ── names ─────────────────────────────── */
-function namesGrid(title){return h('div',{style:'display:grid;gap:14px'},h('h2',{},title),
-  h('div',{class:'grid'},A.map(n=>h('a',{class:'card',href:'#name-'+n.id},h('span',{class:'n'},n.name),h('span',{class:'t'},n.tagline),VIDEOS[n.id]?h('span',{class:'v'},'فيه فيديو'):null))));}
+function namesGrid(title){
+  const fold=t=>t.replace(/[\u064B-\u065F\u0670\u0640]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه');
+  const cards=A.map(n=>h('a',{class:'card',href:'#name-'+n.id,'data-q':fold(n.name+' '+n.plain+' '+n.tagline)},h('span',{class:'n'},n.name),h('span',{class:'t'},n.tagline),VIDEOS[n.id]?h('span',{class:'v'},'فيه فيديو'):null));
+  const none=h('p',{class:'muted',hidden:''},'لا يوجد اسم يطابق بحثك. جرّب كلمة أقصر.');
+  const q=h('input',{type:'search',class:'qsearch',placeholder:'ابحث عن اسم','aria-label':'ابحث عن اسم',autocomplete:'off',oninput:e=>{const v=fold(e.target.value.trim());let c=0;cards.forEach(a=>{const ok=!v||a.dataset.q.includes(v);a.hidden=!ok;if(ok)c++;});none.hidden=c>0;}});
+  return h('div',{style:'display:grid;gap:14px'},h('h2',{},title),q,none,h('div',{class:'grid compact'},cards));}
 function names(){fill($('#v-names'),
   h('div',{class:'prose'},h('h1',{},'الأسماء'),
     h('p',{class:'muted'},'لكل اسم معناه المبسّط والعميق، وآيته، وحديث يتصل به، ثم عشرة أسئلة للتأمل، وعشرون تجلياً من الحياة اليومية، وعشرون مهمة عملية تبدأ بالتجربة، ثم التأمل، ثم الفهم، ثم التطبيق. اختر لمن تقرأ من الأعلى، فيتغير المحتوى ليناسبه.')),
@@ -464,7 +481,7 @@ function booksBlock(){return h('div',{class:'books'},h('h2',{},'كتب مجان�
   h('p',{},'دليل الشاب ودليل الأب ودليل الأم: ثلاثة كتب تمشي مع أسماء الله الحسنى في مواقف الحياة. اقرأها هنا ودوّن ما يخطر لك، أو نزّل الملف للقراءة أو الطباعة.'),
   h('p',{},h('a',{href:'books/'},'افتح الكتب')));}
 function newsBlock(){const L=(window.NEWS||[]).slice().sort((a,b)=>b[0].localeCompare(a[0]));if(!L.length)return null;
-  const row=r=>h('li',{},h('time',{datetime:r[0]},new Date(r[0]).toLocaleDateString('ar',{year:'numeric',month:'long',day:'numeric'})),h('b',{},r[1]),h('span',{},r[2]));
+  const row=r=>h('li',{},h('time',{datetime:r[0]},new Date(r[0]).toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'})),h('b',{},r[1]),h('span',{},r[2]));
   return h('div',{class:'news'},h('h2',{},'ما الجديد'),h('ul',{},L.slice(0,6).map(row)),
     L.length>6?h('details',{},h('summary',{},'كل التحديثات'),h('ul',{style:'margin-top:12px'},L.slice(6).map(row))):null);}
 const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSefTfJgH1C3c6GfhVvPjChKNyRQyJ8YbD9GpkvZ5ZsmajaH9w/viewform';
@@ -542,7 +559,7 @@ function feel(id){
 function careNote(){return h('p',{class:'care'},'إن كان الحزن أو القلق ثقيلاً ويطول أسابيع، أو راودتك أفكار بإيذاء نفسك، فالحديث مع طبيب أو مختص نفسي أو شخص تثق به جزء من الأخذ بالأسباب، ولا يتعارض مع التوكل على الله.');}
 
 /* ── shell ─────────────────────────────── */
-function renderAud(){fill($('#aud'),h('span',{class:'lbl'},'لمن تقرأ؟'),...GROUPS.map(([k,l])=>h('button',{class:'chip','aria-pressed':String(k===aud),onclick:()=>{aud=k;store.set('aud',k);if(jref)saveJ();route();}},l)));}
+function renderAud(){fill($('#aud'),h('span',{class:'lbl'},'لمن تقرأ؟'),...GROUPS.map(([k,l])=>h('button',{class:'chip','aria-pressed':String(k===aud),onclick:()=>{aud=k;store.set('aud',k);if(jref)saveJ();route();}},l)));const sel=$('#aud .chip[aria-pressed="true"]');if(sel&&sel.scrollIntoView)sel.scrollIntoView({block:'nearest',inline:'center'});}
 function route(){
   const hs=(location.hash||'#today').slice(1);let v=hs.startsWith('name-')?'name':hs;
   if(hs.startsWith('feel-'))v='feel';
