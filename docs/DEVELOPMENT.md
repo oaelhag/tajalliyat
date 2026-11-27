@@ -49,3 +49,14 @@
 
 ## الكتب (books/)
 ثلاثة كتب مجانية: دليل الشاب ودليل الأب ودليل الأم (فيه قسم «من الواقع» لكل اسم). المصدر: `source/books/book_<id>.md`. التوليد: `python3 source/tools/gen_books.py` (يحتاج حزمة `markdown`) فيكتب `books/<id>/index.html` (قارئ تفاعلي: فهرس، بحث، تدوين وتقدّم في localStorage بمفتاح `tajalli_book_<id>_v1`) و`books/index.html` (المكتبة). التنسيق والسلوك في `books/reader.css` و`books/reader.js`. ملفات PDF في `books/pdf/` (`dalil-alshab-*` و`dalil-alab-*`، نسخة للشاشة ونسخة للطباعة). الغلافان في `books/img/`. بعد تعديل النص أعد توليد الـPDF ثم انسخه إلى `books/pdf/`. عند إعادة توليد sitemap.xml بـ gen_static.py أعد إضافة سطور `books/`.
+
+## أرقام الموقع (مصدر واحد)
+
+عدد الأسماء وعدد الأسماء التي لها منتجات وعدد الفيديوهات وعدد حالات «قلبي الآن» وعدد صفحات الطباعة لا تُكتب باليد في أي مكان. يحسبها `source/tools/site_stats.py` من البيانات نفسها (`data.js` و`products/names/` و`videos/` و`print/`)، ويكتبها في `stats.json`.
+
+- في `README.md` و`index.html` توضع الأرقام بين علامتين: `<!--stat:names.phrase-->اثنان وأربعون اسماً<!--/stat-->`. والقائمتان (قائمة الأسماء في README، وقائمة «أسماء الله الحسنى في الموقع» في الرئيسية) بين `<!--stat-list:names-->` و`<!--/stat-list-->`. لا يُعدَّل ما بين العلامتين يدوياً.
+- `gen_books.py` يقرأ العدد من `site_stats.py` مباشرة لوصف الكتب.
+- نصوص الكتب (`source/books/*.md`) لا تُولَّد لأنها تمرّ على المراجع؛ والسكربت يفحص أن أول الملف يحمل العدد الحالي.
+- بعد إضافة اسم جديد (بعد `build.py` ونسخ `data.js` و`gen_static.py`): `python3 -I source/tools/site_stats.py`، ثم `python3 -I source/tools/gen_books.py` إن تغيّر العدد. الأمر `--check` يفحص دون كتابة، ويفشل إن بقي رقم قديم.
+- مفاتيح العلامات المتاحة: `names.latin` و`names.ar` و`names.phrase` و`names.def_obl` و`products.phrase_obl` و`videos.phrase_obl` و`feelings.phrase` و`print_pages.latin`. تُضاف مفاتيح جديدة في `tokens()` داخل السكربت.
+- تنبيه: ملفات الكتب الخارجية (PDF من مولّد التصميم) وملفات المشروع على claude.ai لا تتحدث تلقائياً، فتُراجَع يدوياً عند تغيّر العدد.
