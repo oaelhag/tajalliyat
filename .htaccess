@@ -4,6 +4,8 @@ DirectoryIndex index.html
 ErrorDocument 404 /404.html
 
 RewriteEngine On
+# منع الوصول لمجلد git الذي يضعه النشر من Git على الخادم
+RewriteRule (^|/)\.git(/|$) - [R=404,L]
 # HTTPS وبدون www
 RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} ^www\. [NC]
