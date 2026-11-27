@@ -27,3 +27,4 @@ RewriteRule ^ https://tajalliyat.com%{REQUEST_URI} [L,R=301]
 </IfModule>
 AddType font/woff2 .woff2
 AddType text/calendar .ics
+AddType application/manifest+json .webmanifest
