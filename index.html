@@ -235,6 +235,18 @@ body{transition:background .35s,color .35s}
  .grid.compact .card .t{font-size:var(--fs-cap);line-height:1.6}
 }
 .sitenames{margin:40px 0 8px;padding-top:22px;border-top:1px solid var(--rule)}.sitenames summary{cursor:pointer;font-family:var(--f-ui);font-size:var(--fs-ui);color:var(--ink-soft);padding:6px 0}.sitenames p{margin:8px 0 12px;color:var(--ink-soft);font-size:var(--fs-ui)}.sitenames div{display:flex;flex-wrap:wrap;gap:8px 10px}.sitenames a{font-family:var(--f-ui);font-size:var(--fs-ui);color:var(--ink-soft);text-decoration:none;padding:4px 10px;border:1px solid var(--rule);border-radius:999px}.sitenames a:hover{color:var(--ink)}
+
+/* ── Hostinger: زر مشاركة واحد + قائمة، ومساحة للشريط السفلي ── */
+.shi{display:flex;align-items:flex-start;gap:8px}
+.shi>span{flex:1;min-width:0}
+.shwrap{position:relative;flex:none}
+.shbtn{display:inline-flex;align-items:center;justify-content:center;min-width:40px;min-height:40px;padding:0;border:1px solid var(--rule);background:var(--leaf);color:var(--ink-soft);border-radius:999px;cursor:pointer;box-sizing:border-box}
+.shbtn:hover,.shbtn[aria-expanded="true"]{border-color:var(--gold);color:var(--ink)}
+.shwrap .shmenu{display:none;position:absolute;inset-inline-end:0;top:calc(100% + 4px);z-index:4;flex-direction:column;flex-wrap:nowrap;gap:2px;margin:0;padding:6px;min-width:150px;background:var(--paper);border:1px solid var(--rule);border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.shwrap.open .shmenu{display:flex}
+.shwrap .shmenu button,.shwrap .shmenu a{width:100%;justify-content:flex-start;border:0;background:none;border-radius:8px;min-height:40px;padding:6px 12px;font-size:var(--fs-ui);text-align:start;box-sizing:border-box}
+.shwrap .shmenu button:hover,.shwrap .shmenu a:hover{background:var(--lapis-soft);transform:none}
+@media (max-width:640px){body{padding-bottom:calc(var(--navh,64px) + 24px + env(safe-area-inset-bottom,0px))}}
 </style>
 
 <div class="wrap top"><div class="col">
@@ -256,6 +268,36 @@ body{transition:background .35s,color .35s}
   <section class="view" id="v-videos" hidden></section>
 
   <details class="sitenames"><summary>أسماء الله الحسنى في الموقع (<!--stat:names.ar-->٤٢<!--/stat-->)</summary><p>اضغط على أي اسم لتفتح صفحته داخل الموقع.</p><div><!--stat-list:site--><a href="#name-rahman">الرحمن</a><a href="#name-latif">اللطيف</a><a href="#name-wadud">الودود</a><a href="#name-shakur">الشكور</a><a href="#name-tawwab">التواب</a><a href="#name-halim">الحليم</a><a href="#name-wali">الولي</a><a href="#name-wakil">الوكيل</a><a href="#name-hakim">الحكيم الخبير</a><a href="#name-wahid">الواحد القهار</a><a href="#name-azizrahim">العزيز الرحيم</a><a href="#name-samibasir">السميع البصير</a><a href="#name-azizhakim">العزيز الحكيم</a><a href="#name-hayyqayyum">الحي القيوم</a><a href="#name-ghanihamid">الغني الحميد</a><a href="#name-ghafurrahim">الغفور الرحيم</a><a href="#name-qawi">القوي</a><a href="#name-rauf">الرؤوف</a><a href="#name-barr">البر</a><a href="#name-satir">الستير</a><a href="#name-hafiz">الحفيظ</a><a href="#name-sabur">الصبور</a><a href="#name-samad">الصمد</a><a href="#name-razzaq">الرزاق</a><a href="#name-jabbar">الجبار</a><a href="#name-muhaymin">المهيمن</a><a href="#name-muhsin">المحسن</a><a href="#name-malik">الملك</a><a href="#name-khaliq">الخالق</a><a href="#name-quddus">القدوس</a><a href="#name-hamid">الحميد</a><a href="#name-wahhab">الوهاب</a><a href="#name-afuw">العفو</a><a href="#name-karim">الكريم</a><a href="#name-mujib">المجيب</a><a href="#name-shafi">الشافي</a><a href="#name-qarib">القريب</a><a href="#name-fattah">الفتاح</a><a href="#name-nasir">النصير</a><a href="#name-wasi">الواسع</a><a href="#name-baqi">الباقي</a><a href="#name-warith">الوارث</a><!--/stat-list--></div></details>
+
+  <section id="contact" aria-labelledby="contactTitle">
+<!-- Paste inside the landing/site page when the backend is live -->
+<form id="contactForm" class="card" style="max-width:560px;margin:24px auto" novalidate>
+  <h2 id="contactTitle" style="font-size:var(--fs-h3,1.25rem)">تواصل معنا</h2>
+  <p><label>الاسم<br><input name="name" required maxlength="100" style="width:100%"></label></p>
+  <p><label>البريد الإلكتروني<br><input name="email" type="email" required maxlength="190" style="width:100%"></label></p>
+  <p><label>رسالتك<br><textarea name="message" required minlength="5" maxlength="4000" rows="5" style="width:100%"></textarea></label></p>
+  <!-- honeypot: hidden from people, bots fill it -->
+  <p style="position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap" aria-hidden="true"><input name="website" tabindex="-1" autocomplete="off"></p>
+  <button type="submit">إرسال</button>
+  <p id="contactMsg" role="status"></p>
+</form>
+<script>
+document.getElementById('contactForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  var f = e.target, out = document.getElementById('contactMsg');
+  out.textContent = 'جارٍ الإرسال…';
+  try {
+    var r = await fetch('/backend/api/contact.php', { method: 'POST', body: new FormData(f) });
+    var j = await r.json();
+    if (j.ok) { out.textContent = 'وصلتنا رسالتك، شكرًا لك.'; f.reset(); }
+    else if (j.error === 'too_many_requests') out.textContent = 'محاولات كثيرة، جرّب لاحقًا.';
+    else if (j.error === 'invalid_input') out.textContent = 'تأكد من الاسم والبريد والرسالة.';
+    else out.textContent = 'تعذّر الإرسال الآن، جرّب لاحقًا.';
+  } catch (err) { out.textContent = 'تعذّر الإرسال الآن، جرّب لاحقًا.'; }
+});
+</script>
+
+</section>
 
   <footer>محتوى تربوي للتأمل والتعلّم، ونصوص الآيات منقولة حرفياً من المصحف.<br>تطوير أسامة عبد الهادي الهاجري</footer>
 </div></main>
@@ -332,7 +374,19 @@ function shareRow(text,ref,kind,meta,mini){
     h('a',{href:'https://wa.me/?text='+encodeURIComponent(fullText(text,ref,meta)),target:'_blank',rel:'noopener'},'واتساب'),
     h('button',{type:'button',onclick:()=>shareCard(text,ref,kind,meta)},'بطاقة للمشاركة'));}
 function nmeta(n,label){return {id:n.id,plain:n.plain,name:n.name,label};}
-function shareItem(t,n,kind){return h('div',{class:'shi'},h('span',{},t),shareRow(t+(kind==='q'?'':'.'),'',kind,nmeta(n,kind==='q'?'سؤال للتأمل':'تجلٍّ للتأمل'),true));}
+const SHICON='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/></svg>';
+let openShare=null;
+function closeShare(){if(openShare){openShare.wrap.classList.remove('open');openShare.btn.setAttribute('aria-expanded','false');openShare=null;}}
+document.addEventListener('click',e=>{if(openShare&&!openShare.wrap.contains(e.target))closeShare();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&openShare){const b=openShare.btn;closeShare();b.focus();}});
+function shareItem(t,n,kind){
+  const menu=shareRow(t+(kind==='q'?'':'.'),'',kind,nmeta(n,kind==='q'?'سؤال للتأمل':'تجلٍّ للتأمل'),true);
+  menu.classList.add('shmenu');menu.setAttribute('aria-label','خيارات المشاركة');
+  const btn=h('button',{type:'button',class:'shbtn','aria-label':'مشاركة','aria-haspopup':'true','aria-expanded':'false'});btn.innerHTML=SHICON;
+  const wrap=h('div',{class:'shwrap'},btn,menu);
+  btn.addEventListener('click',e=>{e.stopPropagation();const was=openShare&&openShare.wrap===wrap;closeShare();if(!was){wrap.classList.add('open');btn.setAttribute('aria-expanded','true');openShare={wrap,btn};}});
+  menu.addEventListener('click',e=>{if(e.target.closest('button,a'))setTimeout(closeShare,e.target.closest('a')?0:900);});
+  return h('div',{class:'shi'},h('span',{},t),wrap);}
 
 /* ── theme ─────────────────────────────── */
 function curTheme(){const t=document.documentElement.dataset.theme;if(t)return t;return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
@@ -583,5 +637,6 @@ route();
   if(!location.hash.startsWith('#journey'))return;journey();setStatus('تقدّمك محفوظ في حسابك.');
 }catch(e){jref=null;}})();
 </script>
+<script>(function(){function f(){var n=document.querySelector('nav');if(n&&getComputedStyle(n).position==='fixed')document.documentElement.style.setProperty('--navh',n.offsetHeight+'px');}f();addEventListener('resize',f);addEventListener('load',f);})();</script>
 
 </html>
