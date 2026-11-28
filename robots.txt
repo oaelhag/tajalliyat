@@ -1,4 +1,2 @@
 User-agent: *
-Allow: /
-Disallow: /print/
-Sitemap: https://tajalliyat.com/sitemap.xml
+Disallow: /
