@@ -42,6 +42,12 @@ if (strlen($token) < 16 || $token === 'CHANGE_ME_LONG_RANDOM') page('غير مه
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') page('دخول', $form());
 if (!hash_equals($token, (string)($_POST['k'] ?? ''))) { sleep(1); page('دخول', $form('كلمة السر غير صحيحة'), 403); }
 
+// أي خطأ غير متوقع بعد كلمة السر الصحيحة: يُسجَّل ويظهر سببه لصاحب الموقع فقط (بدل صفحة 500 صامتة)
+set_exception_handler(static function (Throwable $e) {
+    error_log('stats.php: ' . $e);
+    page('خطأ', '<h1>خطأ في اللوحة</h1><p dir="ltr">' . htmlspecialchars(get_class($e) . ': ' . $e->getMessage() . ' (line ' . $e->getLine() . ')') . '</p>', 500);
+});
+
 try {
     $pdo = new PDO($cfg['dsn'], $cfg['db_user'], $cfg['db_pass'], [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
     $days = in_array((int)($_POST['days'] ?? 30), [7, 30, 90, 365], true) ? (int)$_POST['days'] : 30;
@@ -93,7 +99,7 @@ $o .= '</select></label> <noscript><button>عرض</button></noscript></form>'
     . '<div class="c">زيارات اليوم<b>' . $todayV . '</b></div><div class="c">أجهزة اليوم<b>' . $todayD . '</b></div></div>';
 
 $o .= '<h2>حسب اليوم</h2><table><tr><th>اليوم</th><th>زيارات</th><th>أجهزة</th><th></th></tr>';
-$maxV = max(1, ...array_values(array_map(static fn($r) => (int)($r['visit'] ?? 0), $series)));
+$maxV = max(array_merge([1], array_map(static fn($r) => (int)($r['visit'] ?? 0), array_values($series))));   // مصفوفة: تصلح حتى لو لا توجد أيام
 foreach (array_reverse($series, true) as $d => $r) $o .= '<tr><td>' . $h($d) . '</td><td class="n">' . ($r['visit'] ?? 0) . '</td><td class="n">' . ($r['device'] ?? 0) . '</td><td style="width:30%"><div class="bar" style="width:' . max(2, (int)round(100 * ($r['visit'] ?? 0) / $maxV)) . '%"></div></td></tr>';
 $o .= '</table>';
 

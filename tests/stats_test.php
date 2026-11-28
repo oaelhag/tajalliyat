@@ -84,6 +84,16 @@ $run = function (array $post, string $method = 'POST') use ($dir): array {
 [$out] = $run(['k' => $tok, 'days' => 7]);
 ok(strpos($out, 'الرحمن') !== false && strpos($out, 'اللطيف') !== false && strpos($out, 'حزين') !== false && strpos($out, 'جوجل') !== false, 'correct token: Arabic labels for names, feelings, referrers');
 ok(strpos($out, '<script') === false && strpos($out, 'noindex') !== false, 'dashboard has no scripts and is noindex');
+// قاعدة فاضية، أو صفوف بلا «زيارة/جهاز»: يجب ألا تنهار اللوحة (كان max() يرمي TypeError → 500)
+$p2->exec('DELETE FROM stats_daily');
+[$out] = $run(['k' => $tok, 'days' => 30]);
+ok(strpos($out, 'إحصاء تجليات الأسماء') !== false && strpos($out, 'Fatal') === false && strpos($out, 'لا بيانات بعد') !== false, 'dashboard renders with empty tables (no crash)');
+$p2->prepare('INSERT INTO stats_daily VALUES (?,?,?,?)')->execute([$today, 'name', 'rahman', 2]);
+[$out] = $run(['k' => $tok, 'days' => 30]);
+ok(strpos($out, 'الرحمن') !== false && strpos($out, 'Fatal') === false, 'dashboard renders with rows but no visit/device rows');
+$p2->exec('DROP TABLE stats_daily');                                  // خطأ غير متوقع: تظهر رسالة لصاحب الموقع لا 500 صامتة
+[$out] = $run(['k' => $tok, 'days' => 30]);
+ok(strpos($out, 'الجداول غير جاهزة') !== false || strpos($out, 'خطأ في اللوحة') !== false, 'missing tables: readable message, not a blank 500');
 file_put_contents("$dir/_private/config.php", "<?php return ['dsn'=>'sqlite:$dbf','db_user'=>'','db_pass'=>'','origins'=>[],'stats_token'=>'CHANGE_ME_LONG_RANDOM'];");
 [$out] = $run(['k' => 'CHANGE_ME_LONG_RANDOM']);  ok(strpos($out, 'غير مفعّلة') !== false && strpos($out, 'الرحمن') === false, 'sample/short token keeps the dashboard disabled');
 echo $fails ? "\n$fails FAILED\n" : "\nALL PASSED\n"; exit($fails ? 1 : 0);
