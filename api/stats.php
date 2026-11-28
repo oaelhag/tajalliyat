@@ -50,7 +50,8 @@ set_exception_handler(static function (Throwable $e) {
 
 try {
     $pdo = new PDO($cfg['dsn'], $cfg['db_user'], $cfg['db_pass'], [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
-    $days = in_array((int)($_POST['days'] ?? 30), [7, 30, 90, 365], true) ? (int)$_POST['days'] : 30;
+    $req = (int)($_POST['days'] ?? 30);                                  // أول دخول بلا حقل days: الافتراضي 30 (كان يُقرأ ثانية فيصير 0 ⇒ نافذة مقلوبة وأصفار)
+    $days = in_array($req, [7, 30, 90, 365], true) ? $req : 30;
     $tz = new DateTimeZone($cfg['stats_tz'] ?? 'UTC');
     $today = new DateTimeImmutable('now', $tz);
     $from = $today->modify('-' . ($days - 1) . ' days')->format('Y-m-d');

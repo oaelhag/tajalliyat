@@ -95,6 +95,12 @@ $run = function (array $post, string $method = 'POST') use ($dir): array {
 ok(strpos($out, 'الرحمن') !== false && strpos($out, 'اللطيف') !== false && strpos($out, 'حزين') !== false && strpos($out, 'جوجل') !== false, 'correct token: Arabic labels for names, feelings, referrers');
 ok(strpos($out, 'diag: rows=7') !== false && strpos($out, 'sum_n=') !== false, 'dashboard shows a one-line diagnostic (row count, day range, window)');
 ok(strpos($out, '<script') === false && strpos($out, 'noindex') !== false, 'dashboard has no scripts and is noindex');
+// أول دخول (بلا حقل days) يجب أن يعرض بيانات اليوم: كان days=0 يقلب النافذة فتظهر أصفار
+$p2->exec("INSERT OR REPLACE INTO stats_daily VALUES ('$today','visit','',9)");
+[$out] = $run(['k' => $tok]);
+ok(strpos($out, '<b>9</b>') !== false && preg_match('/window=(\d{4}-\d\d-\d\d)\.\.(\d{4}-\d\d-\d\d)/', $out, $w) && $w[1] <= $w[2], 'first login (no days field): default 30-day window includes today and shows the data');
+[$out] = $run(['k' => $tok, 'days' => 'garbage']);
+ok(strpos($out, '<b>9</b>') !== false, 'invalid days value falls back to 30');
 // قاعدة فاضية، أو صفوف بلا «زيارة/جهاز»: يجب ألا تنهار اللوحة (كان max() يرمي TypeError → 500)
 $p2->exec('DELETE FROM stats_daily');
 [$out] = $run(['k' => $tok, 'days' => 30]);
