@@ -59,7 +59,7 @@ const ALLOWED = { visit: /^$/, device: /^$/, entry: /^(home|name|feel|feel_hub|b
   await page.goto(B + '/', { waitUntil: 'networkidle' }); await page.reload({ waitUntil: 'networkidle' }); await wait(500);
   await page.locator('.aud .chip', { hasText: 'أب' }).first().click(); await wait(1500);
   ok(has('aud', 'father'), 'audience chip recorded');
-  await page.locator('.share button', { hasText: 'نسخ' }).first().click().catch(() => {}); await wait(1500);
+  await page.locator('.shbtn').first().click(); await page.locator('.shwrap.open .share button', { hasText: 'نسخ' }).first().click().catch(() => {}); await wait(1500);
   ok(has('share', 'copy'), 'share: copy recorded');
   await page.goto(B + '/#name-rahman', { waitUntil: 'networkidle' }); await page.reload({ waitUntil: 'networkidle' }); await wait(500);
   await page.locator('.tabs button', { hasText: 'أسئلة' }).first().click(); await wait(1500);

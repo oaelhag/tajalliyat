@@ -20,6 +20,7 @@ const server = http.createServer((req, res) => {
   if (p === '/sw.js' && state.v2) body = Buffer.from(body.toString().replace(/const VERSION = '[^']+'/, "const VERSION = 'testv2'"));
   res.writeHead(200, { 'Content-Type': MIME[path.extname(f)] || 'application/octet-stream', 'Cache-Control': 'no-cache' }); res.end(body);
 });
+const openP = pg => pg.evaluate(() => { const d = document.getElementById('pwa-panel'); if (d) d.open = true; });
 let fails = 0;
 const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
 const B = 'http://localhost:8790' + PB.replace(/\/$/, '');
@@ -95,6 +96,7 @@ const B = 'http://localhost:8790' + PB.replace(/\/$/, '');
     localStorage.setItem('aud', JSON.stringify('father'));
   });
   await page.reload({ waitUntil: 'networkidle' });
+  await openP(page);
   const dl = page.waitForEvent('download'); await page.click('#pwa-export'); const d = await dl;
   const file = '/tmp/claude-0/diary-test.json'; fs.mkdirSync('/tmp/claude-0', { recursive: true }); await d.saveAs(file);
   const exp = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -116,9 +118,11 @@ const B = 'http://localhost:8790' + PB.replace(/\/$/, '');
   ok(!!after.m && after.aud === JSON.stringify('father') && after.theme === JSON.stringify('dark'), 'import: new book added; existing pref kept, missing pref filled');
   // ملف غير صالح + صيغة «أثر الاسم» القديمة
   fs.writeFileSync('/tmp/claude-0/bad.json', JSON.stringify({ app: 'other', data: {} }));
+  await openP(page);
   await page.setInputFiles('#pwa-file', '/tmp/claude-0/bad.json'); await page.waitForTimeout(400);
   ok((await page.locator('#pwa-msg').innerText()).includes('ليس نسخة دفتر'), 'import: invalid file rejected with message');
   fs.writeFileSync('/tmp/claude-0/bad2.json', JSON.stringify({ app: 'tajalliyat', kind: 'notebook', version: 99, data: {} }));
+  await openP(page);
   await page.setInputFiles('#pwa-file', '/tmp/claude-0/bad2.json'); await page.waitForTimeout(400);
   ok((await page.locator('#pwa-msg').innerText()).includes('ليس نسخة دفتر'), 'import: future version rejected');
   ok(await page.evaluate(() => JSON.parse(localStorage.tajalli_athar_v1).length === 2), 'import: rejected files change nothing');
@@ -128,6 +132,7 @@ const B = 'http://localhost:8790' + PB.replace(/\/$/, '');
   // ── 6) التثبيت: الزر ظاهر دائماً + ملاحظة Chrome
   const fire = () => page.evaluate(() => { window.__prompted = 0; const e = new Event('beforeinstallprompt', { cancelable: true }); e.prompt = () => { window.__prompted++; return Promise.resolve(); }; e.userChoice = Promise.resolve({ outcome: 'dismissed' }); window.dispatchEvent(e); });
   await page.reload({ waitUntil: 'networkidle' });
+  await openP(page);
   ok(await page.locator('#pwa-install').isVisible(), 'install button is visible even before the browser offers install');
   ok((await page.locator('#pwa-panel p').first().innerText()).includes('صدّر دفترك قبل التثبيت حتى تنقله'), 'export notice appears before the install button');
   const note = await page.locator('#pwa-chrome-note').innerText();
@@ -143,10 +148,12 @@ const B = 'http://localhost:8790' + PB.replace(/\/$/, '');
   // ── 7) iPhone: تلميح قابل للإغلاق لا يتكرر + الزر يشرح الخطوات
   const ios = await browser.newContext({ ...devices['iPhone 13'] }); const ip = await ios.newPage();
   await ip.goto(B + '/', { waitUntil: 'networkidle' });
+  await openP(ip);
   ok(await ip.locator('.pwa-hint').isVisible() && (await ip.locator('.pwa-hint').innerText()).includes('إضافة إلى الشاشة الرئيسية'), 'iPhone: install hint shown');
   ok(await ip.locator('#pwa-install').isVisible() && (await ip.locator('#pwa-chrome-note').count()) === 0, 'iPhone: install button visible, no Chrome note');
   await ip.click('#pwa-install'); ok((await ip.locator('#pwa-msg').innerText()).includes('زر المشاركة'), 'iPhone: button explains Share → Add to Home Screen');
   await ip.click('.pwa-hint button'); await ip.reload({ waitUntil: 'networkidle' });
+  await openP(ip);
   ok((await ip.locator('.pwa-hint').count()) === 0 && await ip.locator('#pwa-install').isVisible(), 'iPhone: hint stays closed after dismissal; button remains');
   await ip.locator('#pwa-panel').scrollIntoViewIfNeeded(); await ip.screenshot({ path: '/tmp/claude-0/pwa-ios.png' }); await ios.close();
 
@@ -155,6 +162,7 @@ const B = 'http://localhost:8790' + PB.replace(/\/$/, '');
   const op = await old.newPage();
   await op.goto(B + '/', { waitUntil: 'networkidle' });
   await op.evaluate(() => { window.__prompted = 0; const e = new Event('beforeinstallprompt', { cancelable: true }); e.prompt = () => { window.__prompted++; return Promise.resolve(); }; e.userChoice = Promise.resolve({ outcome: 'dismissed' }); window.dispatchEvent(e); });
+  await openP(op);
   ok(await op.locator('#pwa-install').isVisible(), 'old Android (Chrome 138): install button still visible');
   ok((await op.locator('#pwa-chrome-note').innerText()).includes('139') && (await op.locator('#pwa-chrome-note').evaluate(n => getComputedStyle(n).fontWeight)) >= 600, 'old Android: Chrome note shown (emphasised)');
   await op.click('#pwa-install');

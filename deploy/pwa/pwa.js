@@ -27,8 +27,10 @@
 
   /* ───────────── الأنماط (ترث ألوان الصفحة، فتناسب الوضعين الليلي والنهاري) ───────────── */
   var css = el('style', { text:
-    '#pwa-panel{max-width:46em;margin:34px auto 18px;padding:16px 18px;border:1px solid currentColor;border-radius:14px;font:inherit;line-height:1.8;opacity:.95}' +
-    '#pwa-panel h2{font-size:1.05em;margin:0 0 6px}#pwa-panel p{margin:6px 0}' +
+    '#pwa-panel{max-width:46em;margin:22px auto 10px;border-top:1px solid var(--rule,currentColor);font:inherit;line-height:1.8}' +
+    '#pwa-panel>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-family:var(--f-ui,inherit);font-size:var(--fs-ui,1rem);color:var(--ink-soft,inherit);padding:6px 0}' +
+    '#pwa-panel>summary:focus-visible{outline:2px solid currentColor;outline-offset:3px}' +
+    '#pwa-panel p{margin:6px 0}' +
     '#pwa-panel .pwa-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}' +
     '#pwa-panel button,#pwa-update button{font:inherit;color:inherit;background:none;border:1.5px solid currentColor;border-radius:999px;min-height:44px;min-width:44px;padding:0 18px;cursor:pointer}' +
     '#pwa-panel button:focus-visible,#pwa-update button:focus-visible{outline:2px solid currentColor;outline-offset:3px}' +
@@ -209,10 +211,12 @@
   /* ───────────── لوحة التثبيت والدفتر ───────────── */
   function buildPanel() {
     if (document.getElementById('pwa-panel')) return;
+    var todayView = document.getElementById('v-today');
+    if (!todayView) return;                                    // ليست الصفحة الرئيسية
     var msgEl = el('p', { id: 'pwa-msg', role: 'status' });
     var msg = function (t) { msgEl.textContent = t; };
-    var panel = el('section', { id: 'pwa-panel', 'aria-label': 'التطبيق ونسخة الدفتر' });
-    panel.append(el('h2', { text: standalone ? 'نسخة الدفتر' : 'ثبّت التطبيق' }));
+    var panel = el('details', { id: 'pwa-panel' });
+    panel.append(el('summary', { text: standalone ? 'نسخة الدفتر' : 'ثبّت التطبيق' }));
     if (!standalone && !legacyAndroid) panel.append(el('p', { text: 'صدّر دفترك قبل التثبيت حتى تنقله.' }));
     var row = el('div', { class: 'pwa-row' });
     var exp = el('button', { type: 'button', id: 'pwa-export', text: 'تصدير الدفتر' });
@@ -265,6 +269,9 @@
     var foot = document.querySelector('footer');
     if (foot && foot.parentNode) foot.parentNode.insertBefore(panel, foot);
     else (document.querySelector('main') || document.body).after(panel);
+    var sync = function () { panel.hidden = !!todayView.hidden; };      // تظهر في الصفحة الأولى فقط
+    if (window.MutationObserver) new MutationObserver(sync).observe(todayView, { attributes: true, attributeFilter: ['hidden'] });
+    sync();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', buildPanel); else buildPanel();
 
