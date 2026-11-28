@@ -72,7 +72,7 @@ async function navigate(e) {
 async function swr(e, name, max) {
   const cache = await caches.open(name);
   const hit = await cache.match(e.request, { ignoreSearch: true });
-  const net = fetch(e.request).then(res => { const saved = put(name, e.request, res, max).catch(() => {}); e.waitUntil(saved); return res; }).catch(() => null);
+  const net = fetch(e.request, { cache: 'no-cache' }).then(res => { const saved = put(name, e.request, res, max).catch(() => {}); e.waitUntil(saved); return res; }).catch(() => null);
   e.waitUntil(net);
   return hit || (await net) || Response.error();
 }
