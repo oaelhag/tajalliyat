@@ -125,34 +125,41 @@ const B = 'http://localhost:8790' + PB.replace(/\/$/, '');
   const legacy = await page.evaluate(() => { const v = window.__pwa.validate({ app: 'tajalli-athar', entries: [{ id: 'old1', created: 5 }] }); return !!v && v.athar.length === 1; });
   ok(legacy, 'import: accepts old «أثر الاسم» backup format');
 
-  // ── 6) التثبيت: Android (beforeinstallprompt) مرة واحدة
+  // ── 6) التثبيت: الزر ظاهر دائماً + ملاحظة Chrome
   const fire = () => page.evaluate(() => { window.__prompted = 0; const e = new Event('beforeinstallprompt', { cancelable: true }); e.prompt = () => { window.__prompted++; return Promise.resolve(); }; e.userChoice = Promise.resolve({ outcome: 'dismissed' }); window.dispatchEvent(e); });
-  await page.evaluate(() => localStorage.removeItem('tajalli_pwa_install_v1'));
-  await page.reload({ waitUntil: 'networkidle' }); await fire();
-  ok(await page.locator('#pwa-install').isVisible(), 'install button appears when the browser offers install');
+  await page.reload({ waitUntil: 'networkidle' });
+  ok(await page.locator('#pwa-install').isVisible(), 'install button is visible even before the browser offers install');
   ok((await page.locator('#pwa-panel p').first().innerText()).includes('صدّر دفترك قبل التثبيت حتى تنقله'), 'export notice appears before the install button');
-  await page.click('#pwa-install'); ok((await page.evaluate(() => window.__prompted)) === 1 && !(await page.locator('#pwa-install').isVisible()), 'install button prompts once then hides');
-  await page.reload({ waitUntil: 'networkidle' }); await fire();
-  ok(!(await page.locator('#pwa-install').isVisible()), 'install button does not come back after being used');
+  const note = await page.locator('#pwa-chrome-note').innerText();
+  ok(note.includes('Chrome') && note.includes('139') && note.includes('إنشاء اختصار'), 'Chrome note: older than 139 may not work → create a shortcut');
+  await page.click('#pwa-install');                                             // لا حدث تثبيت → خطوات يدوية
+  ok((await page.locator('#pwa-msg').innerText()).includes('قائمة المتصفح') && (await page.locator('#pwa-msg').innerText()).includes('واتساب'), 'no direct prompt available: shows manual steps (incl. open in Chrome from WhatsApp)');
+  await fire();
+  await page.click('#pwa-install');
+  ok((await page.evaluate(() => window.__prompted)) === 1 && await page.locator('#pwa-install').isVisible(), 'install prompt fires once and the button stays visible');
+  await page.click('#pwa-install');
+  ok((await page.evaluate(() => window.__prompted)) === 1 && (await page.locator('#pwa-msg').innerText()).includes('قائمة المتصفح'), 'second click does not re-prompt; shows manual steps');
 
-  // ── 7) iPhone: تلميح قابل للإغلاق لا يتكرر
+  // ── 7) iPhone: تلميح قابل للإغلاق لا يتكرر + الزر يشرح الخطوات
   const ios = await browser.newContext({ ...devices['iPhone 13'] }); const ip = await ios.newPage();
   await ip.goto(B + '/', { waitUntil: 'networkidle' });
   ok(await ip.locator('.pwa-hint').isVisible() && (await ip.locator('.pwa-hint').innerText()).includes('إضافة إلى الشاشة الرئيسية'), 'iPhone: install hint shown');
+  ok(await ip.locator('#pwa-install').isVisible() && (await ip.locator('#pwa-chrome-note').count()) === 0, 'iPhone: install button visible, no Chrome note');
+  await ip.click('#pwa-install'); ok((await ip.locator('#pwa-msg').innerText()).includes('زر المشاركة'), 'iPhone: button explains Share → Add to Home Screen');
   await ip.click('.pwa-hint button'); await ip.reload({ waitUntil: 'networkidle' });
-  ok((await ip.locator('.pwa-hint').count()) === 0, 'iPhone: hint stays closed after dismissal');
+  ok((await ip.locator('.pwa-hint').count()) === 0 && await ip.locator('#pwa-install').isVisible(), 'iPhone: hint stays closed after dismissal; button remains');
   await ip.locator('#pwa-panel').scrollIntoViewIfNeeded(); await ip.screenshot({ path: '/tmp/claude-0/pwa-ios.png' }); await ios.close();
 
-  // ── 7b) أندرويد قديم (Chrome 138): لا زر تثبيت، تلميح «إنشاء اختصار» بدلاً منه
+  // ── 7b) أندرويد قديم (Chrome 138): الزر ظاهر، لا يستدعي التثبيت المباشر، يعرض الاختصار
   const old = await browser.newContext({ viewport: { width: 360, height: 740 }, userAgent: 'Mozilla/5.0 (Linux; Android 8.1.0; Jelly Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.7204.179 Mobile Safari/537.36' });
   const op = await old.newPage();
   await op.goto(B + '/', { waitUntil: 'networkidle' });
-  await op.evaluate(() => { const e = new Event('beforeinstallprompt', { cancelable: true }); e.prompt = () => Promise.resolve(); e.userChoice = Promise.resolve({ outcome: 'dismissed' }); window.dispatchEvent(e); });
-  ok(!(await op.locator('#pwa-install').isVisible()), 'old Android (Chrome 138): install button hidden');
-  ok((await op.locator('.pwa-hint').innerText()).includes('إنشاء اختصار') && !(await op.locator('#pwa-panel').innerText()).includes('صدّر دفترك قبل التثبيت'), 'old Android: shortcut hint shown instead of install notice');
-  ok(await op.locator('#pwa-export').isVisible() && await op.locator('#pwa-import').isVisible(), 'old Android: export/import still available');
-  await op.click('.pwa-hint button'); await op.reload({ waitUntil: 'networkidle' });
-  ok((await op.locator('.pwa-hint').count()) === 0, 'old Android: hint stays closed after dismissal');
+  await op.evaluate(() => { window.__prompted = 0; const e = new Event('beforeinstallprompt', { cancelable: true }); e.prompt = () => { window.__prompted++; return Promise.resolve(); }; e.userChoice = Promise.resolve({ outcome: 'dismissed' }); window.dispatchEvent(e); });
+  ok(await op.locator('#pwa-install').isVisible(), 'old Android (Chrome 138): install button still visible');
+  ok((await op.locator('#pwa-chrome-note').innerText()).includes('139') && (await op.locator('#pwa-chrome-note').evaluate(n => getComputedStyle(n).fontWeight)) >= 600, 'old Android: Chrome note shown (emphasised)');
+  await op.click('#pwa-install');
+  ok((await op.evaluate(() => window.__prompted)) === 0 && (await op.locator('#pwa-msg').innerText()).includes('إنشاء اختصار'), 'old Android: click shows the shortcut steps, never calls the crashing direct install');
+  ok(!(await op.locator('#pwa-panel').innerText()).includes('صدّر دفترك قبل التثبيت') && await op.locator('#pwa-export').isVisible(), 'old Android: no export-before-install notice, export/import available');
   await op.locator('#pwa-panel').scrollIntoViewIfNeeded(); await op.screenshot({ path: '/tmp/claude-0/pwa-legacy.png' }); await old.close();
 
   // ── 8) قابلية التثبيت (CDP)
