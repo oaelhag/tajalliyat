@@ -1,0 +1,53 @@
+{
+ "id": "/",
+ "name": "تجليات الأسماء",
+ "short_name": "تجليات",
+ "description": "«تجليات» جمع «تجلٍّ»، ومعناه في اللغة أن يظهر الشيء ويتّضح بعد خفاء. ونقصد هنا آثار أسماء الله الحسنى التي نلاحظها في تفاصيل أيامنا، وكيف نعيشها.",
+ "lang": "ar",
+ "dir": "rtl",
+ "start_url": "/?source=pwa",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#0E1324",
+ "theme_color": "#0E1324",
+ "categories": [
+  "education",
+  "lifestyle"
+ ],
+ "icons": [
+  {
+   "src": "/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/icon-maskable-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "maskable"
+  },
+  {
+   "src": "/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "اسم يناسب حالك",
+   "url": "/guide.html"
+  },
+  {
+   "name": "أثر الاسم في حياتي",
+   "url": "/athar.html"
+  }
+ ]
+}

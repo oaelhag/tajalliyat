@@ -19,6 +19,8 @@ RewriteRule ^ https://tajalliyat.com%{REQUEST_URI} [L,R=301]
   ExpiresActive On
   ExpiresByType text/html "access plus 0 seconds"
   ExpiresByType application/javascript "access plus 1 hour"
+  ExpiresByType application/x-javascript "access plus 1 hour"
+  ExpiresByType text/javascript "access plus 1 hour"
   ExpiresByType text/css "access plus 1 day"
   ExpiresByType font/woff2 "access plus 1 year"
   ExpiresByType image/jpeg "access plus 1 month"
@@ -28,3 +30,15 @@ RewriteRule ^ https://tajalliyat.com%{REQUEST_URI} [L,R=301]
 AddType font/woff2 .woff2
 AddType text/calendar .ics
 AddType application/manifest+json .webmanifest
+
+# PWA: هذه الملفات لا تُخزَّن في المتصفح ولا في الـ CDN (وإلا لا تصل تحديثات الأسماء الأسبوعية)
+<IfModule mod_expires.c>
+  <FilesMatch "^(sw\.js|manifest\.webmanifest|offline\.html|pwa\.js)$">
+    ExpiresActive Off
+  </FilesMatch>
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "^(sw\.js|manifest\.webmanifest|offline\.html|pwa\.js)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
