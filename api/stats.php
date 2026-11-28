@@ -56,6 +56,7 @@ try {
     $from = $today->modify('-' . ($days - 1) . ' days')->format('Y-m-d');
     $T = stats_totals($pdo, $from);
     $series = stats_series($pdo, $from);
+    $diag = $pdo->query('SELECT COUNT(*) AS c, MIN(day) AS a, MAX(day) AS b, COALESCE(SUM(n), 0) AS s FROM stats_daily')->fetch(PDO::FETCH_ASSOC);
 } catch (Throwable $e) {
     error_log('stats.php: ' . $e->getMessage());
     page('خطأ', '<h1>الجداول غير جاهزة</h1><p>شغّل ملف SQL الخاص بالإحصاء في phpMyAdmin أولاً.</p>', 503);
@@ -114,4 +115,6 @@ $o .= $tbl('الأسماء الأكثر مشاهدة', $T['name'] ?? [], $nameOf
     . $tbl('الفئة المختارة', $T['aud'] ?? [], $map('aud'))
     . $tbl('المشاركة', $T['share'] ?? [], $map('share'))
     . $tbl('التطبيق والدفتر', $T['pwa'] ?? [], $map('pwa'));
+$o .= '<p class="mut" dir="ltr" style="margin-top:28px">diag: rows=' . (int)$diag['c'] . ' | first_day=' . $h($diag['a'] ?? '-') . ' | last_day=' . $h($diag['b'] ?? '-') . ' | sum_n=' . (int)$diag['s']
+    . ' | window=' . $h($from) . '..' . $h($d0) . ' (' . $h($cfg['stats_tz'] ?? 'UTC') . ') | server_now_utc=' . gmdate('Y-m-d H:i') . '</p>';
 page('إحصاء', $o);

@@ -93,6 +93,7 @@ $run = function (array $post, string $method = 'POST') use ($dir): array {
 [$out] = $run(['k' => 'wrong-wrong-wrong-1']);     ok(strpos($out, 'كلمة السر غير صحيحة') !== false && strpos($out, 'الرحمن') === false, 'wrong token: no data');
 [$out] = $run(['k' => $tok, 'days' => 7]);
 ok(strpos($out, 'الرحمن') !== false && strpos($out, 'اللطيف') !== false && strpos($out, 'حزين') !== false && strpos($out, 'جوجل') !== false, 'correct token: Arabic labels for names, feelings, referrers');
+ok(strpos($out, 'diag: rows=7') !== false && strpos($out, 'sum_n=') !== false, 'dashboard shows a one-line diagnostic (row count, day range, window)');
 ok(strpos($out, '<script') === false && strpos($out, 'noindex') !== false, 'dashboard has no scripts and is noindex');
 // قاعدة فاضية، أو صفوف بلا «زيارة/جهاز»: يجب ألا تنهار اللوحة (كان max() يرمي TypeError → 500)
 $p2->exec('DELETE FROM stats_daily');
