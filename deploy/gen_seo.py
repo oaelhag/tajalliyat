@@ -186,7 +186,7 @@ if n_links < 40:
     die(f'expected 42 name links, got {n_links}')
 new_block = re.sub(r'href="#name-([a-z]+)"', r'href="/n/\1/"', block)
 new_block = new_block.replace('اضغط على أي اسم لتفتح صفحته داخل الموقع.', 'اضغط على أي اسم لتفتح صفحته.')
-feel_block = ('<details class="sitenames"><summary>بماذا تشعر الآن؟ (' + str(len(FEEL)) + ')</summary>'
+feel_block = ('<details class="sitenames" id="feel-list" open><summary>بماذا تشعر الآن؟ (' + str(len(FEEL)) + ')</summary>'
               '<p>صفحة لكل شعور: كلمة وآية ودعاء وخطوات صغيرة والأسماء التي ترافقك.</p><div>' +
               ''.join(f'<a href="/feel/{f["id"]}/">{esc(f["label"])}</a>' for f in FEEL) + '</div></details>')
 s = s.replace(block, new_block + '\n  ' + feel_block, 1)

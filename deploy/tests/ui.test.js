@@ -61,6 +61,10 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     }
     await page.evaluate(() => { location.hash = '#today'; }); await wait(350);
     ok(await panel.isVisible(), `[${label}] panel visible again on the first page`);
+    // قائمة «بماذا تشعر الآن؟» مفتوحة دائماً (ليست مطوية) وفيها 13 رابطاً
+    const fl = page.locator('#feel-list');
+    ok(await fl.evaluate(d => d.open) && (await fl.locator('a:visible').count()) === 13, `[${label}] "بماذا تشعر الآن؟" list is open by default with all 13 links visible`);
+    await fl.scrollIntoViewIfNeeded(); await page.screenshot({ path: `${SHOTS}/${label}-6-feel-list.png` });
     // نموذج التواصل
     posts.length = 0;
     await page.locator('#contactForm [name=name]').fill('اختبار'); await page.locator('#contactForm [name=email]').fill('a@b.co'); await page.locator('#contactForm [name=message]').fill('رسالة');
