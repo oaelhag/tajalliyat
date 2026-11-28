@@ -186,10 +186,16 @@ if n_links < 40:
     die(f'expected 42 name links, got {n_links}')
 new_block = re.sub(r'href="#name-([a-z]+)"', r'href="/n/\1/"', block)
 new_block = new_block.replace('اضغط على أي اسم لتفتح صفحته داخل الموقع.', 'اضغط على أي اسم لتفتح صفحته.')
-feel_block = ('<details class="sitenames" id="feel-list" open><summary>بماذا تشعر الآن؟ (' + str(len(FEEL)) + ')</summary>'
+feel_block = ('<details class="sitenames" id="feel-list" open hidden><summary>بماذا تشعر الآن؟ (' + str(len(FEEL)) + ')</summary>'
               '<p>صفحة لكل شعور: كلمة وآية ودعاء وخطوات صغيرة والأسماء التي ترافقك.</p><div>' +
               ''.join(f'<a href="/feel/{f["id"]}/">{esc(f["label"])}</a>' for f in FEEL) + '</div></details>')
 s = s.replace(block, new_block + '\n  ' + feel_block, 1)
+# القائمة تظهر في شاشة «قلبي الآن» فقط (تبقى في الصفحة لزاحفات جوجل)
+FEEL_JS = ("<script>(function(){var l=document.getElementById('feel-list'),v=document.getElementById('v-feel');if(!l||!v)return;"
+           "function s(){l.hidden=!!v.hidden;}if(window.MutationObserver)new MutationObserver(s).observe(v,{attributes:true,attributeFilter:['hidden']});s();})();</script>\n")
+if s.count('\n</html>') != 1:
+    die('end-of-page anchor not found')
+s = s.replace('\n</html>', '\n' + FEEL_JS + '</html>')
 
 # صفحة الحالة داخل التطبيق: رابط ثابت للصفحة المستقلة (للمشاركة بمعاينة صحيحة)
 OLD = "(f.how&&f.how[id])||''));}))),\n    careNote());"
