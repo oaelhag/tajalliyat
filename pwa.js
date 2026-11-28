@@ -1,10 +1,10 @@
 /* PWA — تسجيل الـ service worker، شريط التحديث، زر التثبيت، وتصدير/استيراد الدفتر.
- * لا يغيّر أي مفتاح تخزين موجود. المفتاحان الجديدان الوحيدان: tajalli_pwa_install_v1 و tajalli_pwa_ios_hint_v1.
+ * لا يغيّر أي مفتاح تخزين موجود. المفتاح الجديد الوحيد: tajalli_pwa_ios_hint_v1 (إغلاق تلميح iPhone).
  */
 (function () {
   'use strict';
   var BASE = new URL('./', document.currentScript.src).pathname;      // '/' على الإنتاج
-  var LS = { install: 'tajalli_pwa_install_v1', ios: 'tajalli_pwa_ios_hint_v1', legacy: 'tajalli_pwa_legacy_hint_v1' };
+  var LS = { ios: 'tajalli_pwa_ios_hint_v1' };
   var ATHAR = 'tajalli_athar_v1', JOURNEY = 'journey', PREFS = ['aud', 'theme', 'rtime'];
   var BOOK_KEY = /^tajalli_book_[a-z0-9]+_v1$/;
   var FORMAT = { app: 'tajalliyat', kind: 'notebook', version: 1 };
@@ -34,7 +34,7 @@
     '#pwa-panel button:focus-visible,#pwa-update button:focus-visible{outline:2px solid currentColor;outline-offset:3px}' +
     '#pwa-panel .pwa-hint{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;border-top:1px dashed currentColor;margin-top:12px;padding-top:10px}' +
     '#pwa-panel .pwa-hint button{flex:none;padding:0 12px}' +
-    '#pwa-msg{font-size:.95em}#pwa-msg:empty{display:none}' +
+    '#pwa-panel .pwa-note{font-size:.9em;opacity:.9;margin-top:10px}#pwa-msg{font-size:.95em}#pwa-msg:empty{display:none}' +
     '#pwa-update{position:fixed;z-index:2147483000;inset-inline:12px;bottom:calc(var(--navh,0px) + 12px + env(safe-area-inset-bottom,0px));max-width:30em;margin-inline:auto;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:14px;background:#0E1324;color:#E9E6DD;border:1px solid #E3B45C;font:500 15px/1.7 system-ui,sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.35)}' +
     '#pwa-update button{color:#E3B45C;min-height:40px}' });
   document.head.append(css);
@@ -208,7 +208,7 @@
     var msgEl = el('p', { id: 'pwa-msg', role: 'status' });
     var msg = function (t) { msgEl.textContent = t; };
     var panel = el('section', { id: 'pwa-panel', 'aria-label': 'التطبيق ونسخة الدفتر' });
-    panel.append(el('h2', { text: standalone ? 'نسخة الدفتر' : (legacyAndroid ? 'اختصار على الشاشة الرئيسية' : 'ثبّت التطبيق') }));
+    panel.append(el('h2', { text: standalone ? 'نسخة الدفتر' : 'ثبّت التطبيق' }));
     if (!standalone && !legacyAndroid) panel.append(el('p', { text: 'صدّر دفترك قبل التثبيت حتى تنقله.' }));
     var row = el('div', { class: 'pwa-row' });
     var exp = el('button', { type: 'button', id: 'pwa-export', text: 'تصدير الدفتر' });
@@ -218,32 +218,35 @@
     imp.onclick = function () { file.click(); };
     file.onchange = function () { if (file.files[0]) doImport(file.files[0], msg); file.value = ''; };
     row.append(exp, imp, file);
-    var inst = el('button', { type: 'button', id: 'pwa-install', text: 'ثبّت التطبيق', hidden: '' });
-    row.append(inst);
-    panel.append(row, msgEl);
+    var inst = el('button', { type: 'button', id: 'pwa-install', text: 'ثبّت التطبيق' });
+    if (!standalone) row.append(inst);                         // ظاهر دائماً (ما عدا داخل التطبيق المثبّت)
+    panel.append(row);
+    if (!standalone && !isIOS) {
+      panel.append(el('p', { id: 'pwa-chrome-note', class: 'pwa-note', style: legacyAndroid ? 'font-weight:600' : '',
+        text: 'ملاحظة: إذا كان إصدار Chrome لديك أقدم من 139 (أندرويد 8 أو 9) فقد لا يعمل معه التطبيق المثبّت. الأفضل في هذه الحالة: من قائمة Chrome اختر «إضافة إلى الشاشة الرئيسية» ثم «إنشاء اختصار»، فيفتح الموقع ويعمل بدون إنترنت.' }));
+    }
+    panel.append(msgEl);
 
-    // أندرويد/كروم: زر واحد، يظهر مرة واحدة فقط
+    var SHORTCUT = 'على هذا الجهاز: من قائمة Chrome اختر «إضافة إلى الشاشة الرئيسية» ثم «إنشاء اختصار».';
+    var MANUAL = isIOS
+      ? 'على iPhone: اضغط زر المشاركة في Safari، ثم «إضافة إلى الشاشة الرئيسية».'
+      : 'لم يعرض المتصفح التثبيت المباشر. افتح قائمة المتصفح (⋮) واختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية». وإن فتحت الرابط من داخل تطبيق آخر مثل واتساب فافتحه في Chrome نفسه أولاً.';
     var deferred = null;
     window.addEventListener('beforeinstallprompt', function (e) {
       e.preventDefault();
-      if (standalone || legacyAndroid || lsGet(LS.install)) return;
-      deferred = e; inst.hidden = false;
+      if (!standalone && !legacyAndroid) deferred = e;           // الجهاز القديم: لا نستدعي التثبيت المباشر لأنه ينهار
     });
     inst.onclick = function () {
-      if (!deferred) return;
-      var d = deferred; deferred = null; inst.hidden = true; lsSet(LS.install, String(Date.now()));
-      d.prompt(); d.userChoice.then(function (c) { msg(c && c.outcome === 'accepted' ? 'تم التثبيت.' : ''); });
+      if (legacyAndroid) { msg(SHORTCUT); return; }
+      if (deferred) {
+        var d = deferred; deferred = null;                       // التثبيت المباشر يُستدعى مرة واحدة لكل حدث
+        d.prompt();
+        d.userChoice.then(function (c) { msg(c && c.outcome === 'accepted' ? 'تم التثبيت.' : 'لم يكتمل التثبيت. يمكنك إعادة المحاولة من قائمة المتصفح (⋮) ← «تثبيت التطبيق».'); });
+        return;
+      }
+      msg(MANUAL);
     };
-    window.addEventListener('appinstalled', function () { inst.hidden = true; lsSet(LS.install, String(Date.now())); });
-
-    // الجهاز القديم: تلميح الاختصار بدل التثبيت
-    if (legacyAndroid && !standalone && !lsGet(LS.legacy)) {
-      var lclose = el('button', { type: 'button', 'aria-label': 'إغلاق التلميح', text: '×' });
-      var lhint = el('div', { class: 'pwa-hint', role: 'note' }, [
-        el('span', { text: 'من قائمة Chrome اختر «إضافة إلى الشاشة الرئيسية» ثم «إنشاء اختصار». يفتح الموقع ويعمل بدون إنترنت.' }), lclose]);
-      lclose.onclick = function () { lsSet(LS.legacy, String(Date.now())); lhint.remove(); };
-      panel.append(lhint);
-    }
+    window.addEventListener('appinstalled', function () { msg('تم التثبيت.'); });
 
     // iPhone: تلميح قابل للإغلاق، لا يتكرر بعد إغلاقه
     if (isIOS && !standalone && !lsGet(LS.ios)) {
