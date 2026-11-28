@@ -2,8 +2,8 @@
 # يبني نسخة الموقع المنشورة على Hostinger من فرع main دون تعديله.
 # الاستخدام: deploy/build_hostinger.sh <مجلد-الإخراج> [المرجع، افتراضياً origin/main]
 set -euo pipefail
-# الأعلام الافتراضية = الحالة الحية (تُصدَّر لتراها السكربتات الفرعية): PWA وABOUT مفعّلان، STATS مطفأ حتى الموافقة
-export PWA="${PWA:-1}" ABOUT="${ABOUT:-1}" STATS="${STATS:-0}"
+# الأعلام الافتراضية = الحالة الحية (تُصدَّر لتراها السكربتات الفرعية): PWA وABOUT وSTATS مفعّلة (0 لإيقاف أي منها)
+export PWA="${PWA:-1}" ABOUT="${ABOUT:-1}" STATS="${STATS:-1}"
 OUT=${1:?output dir}; REF=${2:-origin/main}
 OLD='oaelhag.github.io/tajalliyat'; NEW='tajalliyat.com'
 rm -rf "$OUT"; mkdir -p "$OUT"
@@ -38,7 +38,7 @@ if [ "${ABOUT:-1}" = 1 ]; then
   python3 "$(dirname "$0")/texts.py" --check
   python3 "$(dirname "$0")/about.py" "$OUT"
 fi
-# إحصاء مجهول (اختياري، مطفأ حتى الموافقة): STATS=1
+# إحصاء مجهول: مفعّل افتراضياً (STATS=0 لإيقافه)
 if [ "${STATS:-0}" = 1 ]; then
   python3 "$(dirname "$0")/stats.py" "$OUT"
 fi
