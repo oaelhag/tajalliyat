@@ -2,9 +2,9 @@
  * يُولَّد من deploy/pwa/sw.js بواسطة deploy/pwa.py (يستبدل __PLACEHOLDERS__).
  * قواعد: GET من نفس الأصل فقط؛ لا /backend/؛ لا فيديو ولا PDF؛ لا skipWaiting تلقائي.
  */
-const VERSION = '7c894b9caa4c';
+const VERSION = '46854c263804';
 const BASE = '/';                         // '/' على الإنتاج
-const CORE = ["/", "/guide.html", "/athar.html", "/offline.html", "/manifest.webmanifest", "/pwa.js", "/icon.svg", "/favicon-48.png", "/apple-touch-icon.png", "/icon-192.png", "/icon-512.png", "/assets/fonts/amiri-quran-arabic-400-normal.woff2", "/assets/fonts/fonts.css", "/assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2", "/assets/fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2", "/assets/fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2", "/assets/fonts/noto-naskh-arabic-arabic-400-normal.woff2", "/assets/fonts/noto-naskh-arabic-arabic-600-normal.woff2", "/assets/fonts/noto-naskh-arabic-arabic-700-normal.woff2", "/assets/fonts/reem-kufi-arabic-500-normal.woff2", "/assets/fonts/reem-kufi-arabic-700-normal.woff2"];                           // القشرة: يجب أن تنجح كلها
+const CORE = ["/", "/guide.html", "/athar.html", "/offline.html", "/manifest.webmanifest", "/pwa.js", "/icon.svg", "/favicon-48.png", "/apple-touch-icon.png", "/icon-192.png", "/icon-512.png", "/assets/fonts/amiri-quran-arabic-400-normal.woff2", "/assets/fonts/fonts.css", "/assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2", "/assets/fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2", "/assets/fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2", "/assets/fonts/noto-naskh-arabic-arabic-400-normal.woff2", "/assets/fonts/noto-naskh-arabic-arabic-600-normal.woff2", "/assets/fonts/noto-naskh-arabic-arabic-700-normal.woff2", "/assets/fonts/reem-kufi-arabic-500-normal.woff2", "/assets/fonts/reem-kufi-arabic-700-normal.woff2", "/stats.js"];                           // القشرة: يجب أن تنجح كلها
 const OPTIONAL = ["/books/", "/feel/", "/books/reader.css", "/books/reader.js"];                   // قشرة إضافية: تُحمَّل إن أمكن
 const DATA_FILES = ["/data.js", "/prod.js", "/news.js"];                     // data.js وغيره: stale-while-revalidate
 
