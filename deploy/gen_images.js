@@ -29,14 +29,24 @@ const iconSvg = '<svg viewBox="0 0 64 64" width="100%" height="100%"><g fill="no
     fs.mkdirSync(path.dirname(path.join(OUT, j.path)), { recursive: true });
     await p.screenshot({ path: path.join(OUT, j.path), type: 'jpeg', quality: 84 });
   }
-  const names = { 48: 'favicon-48.png', 180: 'apple-touch-icon.png', 192: 'icon-192.png', 512: 'icon-512.png' };
-  for (const s of jobs.icons) {
-    await p.setViewportSize({ width: s, height: s });
-    fs.writeFileSync(tmp, `<!doctype html><meta charset=utf-8><body style="margin:0;background:#0E1324;width:${s}px;height:${s}px">${iconSvg}</body>`);
+  // أيقونات: full = خلفية كاملة؛ any = زوايا دائرية بخلفية شفافة؛ maskable = خلفية كاملة ونجمة داخل المنطقة الآمنة (80%)
+  const star2 = k => `<svg viewBox="0 0 64 64" width="100%" height="100%"><g fill="none" stroke="#E3B45C" stroke-width="${2.6 / k}" transform="translate(32 32) scale(${k}) translate(-32 -32)"><rect x="17" y="17" width="30" height="30"/><rect x="17" y="17" width="30" height="30" transform="rotate(45 32 32)"/></g></svg>`;
+  const specs = [
+    { f: 'favicon-48.png', s: 48, m: 'full' }, { f: 'apple-touch-icon.png', s: 180, m: 'full' },
+    { f: 'icon-192.png', s: 192, m: 'any' }, { f: 'icon-512.png', s: 512, m: 'any' },
+    { f: 'icon-maskable-192.png', s: 192, m: 'mask' }, { f: 'icon-maskable-512.png', s: 512, m: 'mask' },
+  ];
+  for (const sp of specs) {
+    await p.setViewportSize({ width: sp.s, height: sp.s });
+    const bg = sp.m === 'any' ? `background:transparent;border-radius:${Math.round(sp.s * 0.19)}px;overflow:hidden` : 'background:#0E1324';
+    const html = sp.m === 'any'
+      ? `<body style="margin:0;background:transparent"><div style="width:${sp.s}px;height:${sp.s}px;${bg};background:#0E1324">${iconSvg}</div></body>`
+      : `<body style="margin:0;background:#0E1324;width:${sp.s}px;height:${sp.s}px">${sp.m === 'mask' ? star2(0.8) : iconSvg}</body>`;
+    fs.writeFileSync(tmp, '<!doctype html><meta charset=utf-8>' + html);
     await p.goto('file://' + tmp);
-    await p.screenshot({ path: path.join(OUT, names[s]), type: 'png' });
+    await p.screenshot({ path: path.join(OUT, sp.f), type: 'png', omitBackground: sp.m === 'any' });
   }
   fs.unlinkSync(tmp);
   await b.close();
-  console.log('gen_images: ' + jobs.og.length + ' share images + ' + jobs.icons.length + ' icons');
+  console.log('gen_images: ' + jobs.og.length + ' share images + ' + 6 + ' icons');
 })();

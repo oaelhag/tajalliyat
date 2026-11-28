@@ -107,6 +107,6 @@ for pdf in sorted((OUT / 'books' / 'pdf').glob('*.pdf')):
     n += scrub_pdf(pdf)
 for pdf in OUT.rglob('*.pdf'):                          # تحقق نهائي من كل الـ PDF
     t = ptext(pdf)
-    if re.search(r'أسامة|الهاج\s*ري', t):               # الاسم فقط؛ عنوان GitHub القديم في تذييل ملفات pdf/ قرار منفصل
+    if re.search(r'أسامة|الهاج\s*ري|oaelhag', t):
         die('name still present in ' + str(pdf.relative_to(OUT)))
 print(f'scrub_developer: {n} book PDFs cleaned; all PDFs verified')

@@ -30,7 +30,7 @@ if MODE == 'check':
         for ref in set(re.findall(r'content="https://tajalliyat\.com/(og/[^"]+\.jpg)"', page.read_text(encoding='utf-8'))):
             if not (OUT / ref).exists():
                 (OUT / ref).write_bytes(default.read_bytes()); fixed += 1; print('fallback image for', ref)
-    for f in ['icon.svg', 'favicon-48.png', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png']:
+    for f in ['icon.svg', 'favicon-48.png', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'icon-maskable-192.png', 'icon-maskable-512.png']:
         if not (OUT / f).exists():
             print('WARNING: missing', f)
     print('gen_seo check: ok,', fixed, 'fallbacks')

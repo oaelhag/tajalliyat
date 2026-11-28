@@ -21,6 +21,8 @@ else
 fi
 rm -f "$OUT/_img_jobs.json"
 python3 -I "$(dirname "$0")/gen_seo.py" "$OUT" check
+# ملفات pdf/ لكل اسم: إعادة توليدها من print/*.html بعنوان الموقع الجديد
+if node -e "require('playwright')" 2>/dev/null; then node "$(dirname "$0")/gen_pdfs.js" "$OUT"; else echo "ERROR: playwright مطلوب لتوليد PDF" >&2; exit 1; fi
 # إزالة اسم المطوّر من كل الملفات (نصوص وPDF) مع التحقق
 python3 "$(dirname "$0")/scrub_developer.py" "$OUT"
 # 404 حقيقية: صفحة بمحتوى وروابط و noindex بدل التحويل التلقائي (يعدّه جوجل soft-404)
