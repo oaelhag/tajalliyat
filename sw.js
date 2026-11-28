@@ -2,7 +2,7 @@
  * يُولَّد من deploy/pwa/sw.js بواسطة deploy/pwa.py (يستبدل __PLACEHOLDERS__).
  * قواعد: GET من نفس الأصل فقط؛ لا /backend/؛ لا فيديو ولا PDF؛ لا skipWaiting تلقائي.
  */
-const VERSION = 'a40298b0038b';
+const VERSION = '84721c0c699b';
 const BASE = '/pwa-preview/';                         // '/' على الإنتاج
 const CORE = ["/pwa-preview/", "/pwa-preview/guide.html", "/pwa-preview/athar.html", "/pwa-preview/offline.html", "/pwa-preview/manifest.webmanifest", "/pwa-preview/pwa.js", "/pwa-preview/icon.svg", "/pwa-preview/favicon-48.png", "/pwa-preview/apple-touch-icon.png", "/pwa-preview/icon-192.png", "/pwa-preview/icon-512.png", "/pwa-preview/assets/fonts/amiri-quran-arabic-400-normal.woff2", "/pwa-preview/assets/fonts/fonts.css", "/pwa-preview/assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2", "/pwa-preview/assets/fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2", "/pwa-preview/assets/fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2", "/pwa-preview/assets/fonts/noto-naskh-arabic-arabic-400-normal.woff2", "/pwa-preview/assets/fonts/noto-naskh-arabic-arabic-600-normal.woff2", "/pwa-preview/assets/fonts/noto-naskh-arabic-arabic-700-normal.woff2", "/pwa-preview/assets/fonts/reem-kufi-arabic-500-normal.woff2", "/pwa-preview/assets/fonts/reem-kufi-arabic-700-normal.woff2"];                           // القشرة: يجب أن تنجح كلها
 const OPTIONAL = ["/pwa-preview/books/", "/pwa-preview/feel/", "/pwa-preview/books/reader.css", "/pwa-preview/books/reader.js"];                   // قشرة إضافية: تُحمَّل إن أمكن
