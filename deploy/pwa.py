@@ -36,7 +36,7 @@ manifest = {
         {'src': BASE + 'icon-maskable-192.png', 'sizes': '192x192', 'type': 'image/png', 'purpose': 'maskable'},
         {'src': BASE + 'icon-maskable-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'maskable'}],
     'shortcuts': [{'name': 'اسم يناسب حالك', 'url': BASE + 'guide.html'}, {'name': 'أثر الاسم في حياتي', 'url': BASE + 'athar.html'}]}
-if os.environ.get('ABOUT') == '1':                  # وصف المانيفست من النص العربي المعتمد نفسه
+if os.environ.get('ABOUT', '1') == '1':                  # وصف المانيفست من النص العربي المعتمد نفسه
     sys.path.insert(0, str(pathlib.Path(__file__).parent))
     import texts
     manifest['description'] = texts.ar('about_tajalliyat')
@@ -88,6 +88,8 @@ fonts = sorted(f.name for f in (OUT / 'assets' / 'fonts').iterdir() if f.is_file
 CORE = [BASE, BASE + 'guide.html', BASE + 'athar.html', BASE + 'offline.html', BASE + 'manifest.webmanifest', BASE + 'pwa.js',
         BASE + 'icon.svg', BASE + 'favicon-48.png', BASE + 'apple-touch-icon.png', BASE + 'icon-192.png', BASE + 'icon-512.png'] + \
        [BASE + 'assets/fonts/' + f for f in fonts]
+if (OUT / 'stats.js').exists():
+    CORE.append(BASE + 'stats.js')
 DATA = [BASE + 'data.js', BASE + 'prod.js', BASE + 'news.js']
 OPTIONAL = [BASE + 'books/', BASE + 'feel/', BASE + 'books/reader.css', BASE + 'books/reader.js']
 

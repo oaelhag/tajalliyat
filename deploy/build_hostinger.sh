@@ -2,6 +2,8 @@
 # يبني نسخة الموقع المنشورة على Hostinger من فرع main دون تعديله.
 # الاستخدام: deploy/build_hostinger.sh <مجلد-الإخراج> [المرجع، افتراضياً origin/main]
 set -euo pipefail
+# الأعلام الافتراضية = الحالة الحية (تُصدَّر لتراها السكربتات الفرعية): PWA وABOUT مفعّلان، STATS مطفأ حتى الموافقة
+export PWA="${PWA:-1}" ABOUT="${ABOUT:-1}" STATS="${STATS:-0}"
 OUT=${1:?output dir}; REF=${2:-origin/main}
 OLD='oaelhag.github.io/tajalliyat'; NEW='tajalliyat.com'
 rm -rf "$OUT"; mkdir -p "$OUT"
@@ -31,12 +33,16 @@ cat > "$OUT/404.html" <<'EOT'
 EOT
 cp "$(dirname "$0")/htaccess" "$OUT/.htaccess"
 echo "built $REF -> $OUT ($(git rev-parse --short "$REF"))"
-# معنى «تجليات» في الصفحة الأولى (اختياري): ABOUT=1
-if [ "${ABOUT:-0}" = 1 ]; then
+# معنى «تجليات» في الصفحة الأولى: مفعّل افتراضياً (ABOUT=0 لإيقافه)
+if [ "${ABOUT:-1}" = 1 ]; then
   python3 "$(dirname "$0")/texts.py" --check
   python3 "$(dirname "$0")/about.py" "$OUT"
 fi
-# PWA (اختياري): PWA=1  [PWA_BASE=/pwa-preview/]  [PWA_PREVIEW=1 لمنع الفهرسة]
-if [ "${PWA:-0}" = 1 ]; then
+# إحصاء مجهول (اختياري، مطفأ حتى الموافقة): STATS=1
+if [ "${STATS:-0}" = 1 ]; then
+  python3 "$(dirname "$0")/stats.py" "$OUT"
+fi
+# PWA: مفعّل افتراضياً (PWA=0 لإيقافه)  [PWA_BASE=/pwa-preview/]  [PWA_PREVIEW=1 لمنع الفهرسة]
+if [ "${PWA:-1}" = 1 ]; then
   python3 "$(dirname "$0")/pwa.py" "$OUT" "${PWA_BASE:-/}" ${PWA_PREVIEW:+preview}
 fi

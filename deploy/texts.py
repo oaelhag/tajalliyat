@@ -28,12 +28,12 @@ def _load(name):
     return json.loads((CONTENT / name).read_text(encoding='utf-8'))
 
 
-def ar(key):
-    """النص العربي المعتمد لمفتاح؛ يفشل إن لم يكن status = approved."""
+def ar(key, allow_draft=False):
+    """النص العربي لمفتاح؛ يفشل إن لم يكن status = approved (إلا للنصوص التشغيلية بـ allow_draft)."""
     e = _load('site_texts.json').get(key)
     if not isinstance(e, dict) or not e.get('ar'):
         raise SystemExit(f'texts: المفتاح غير موجود: {key}')
-    if e.get('status') != 'approved':
+    if e.get('status') != 'approved' and not (allow_draft and e.get('status') == 'draft'):
         raise SystemExit(f'texts: النص «{key}» غير معتمد (status={e.get("status")})')
     lint(e['ar'], key)
     return e['ar']
@@ -50,6 +50,8 @@ def check_all():
         if isinstance(v, dict):
             assert v.get('status') in ('approved', 'draft'), f'{k}: status غير صالح'
             for lang in ('ar', 'en'):
+                if lang == 'en' and v.get('status') == 'draft' and not v.get('en'):
+                    continue                                       # النصوص التشغيلية (draft) بلا ترجمة بعد
                 assert v.get(lang), f'{k}: الحقل {lang} ناقص'
                 lint(v[lang], f'{k}.{lang}')
     g = _load('glossary.json')

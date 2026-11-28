@@ -93,7 +93,10 @@
   }
   function stamp() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
 
+  function stat(i) { try { if (window.__stat) window.__stat('pwa', i); } catch (e) {} }
+
   function doExport(msg) {
+    stat('export');
     var payload = Object.assign({}, FORMAT, { exportedAt: new Date().toISOString(), data: collect() });
     var name = 'tajalliyat-diary-' + stamp() + '.json';
     var blob = new Blob([JSON.stringify(payload, null, 1)], { type: 'application/json' });
@@ -195,6 +198,7 @@
       var imp; try { imp = validate(JSON.parse(r.result)); } catch (e) { imp = null; }
       if (!imp) { msg('هذا الملف ليس نسخة دفتر من «تجليات الأسماء».'); return; }
       var s = apply(imp);
+      stat('import');
       msg('تم الدمج: ' + s.added + ' عنصر جديد' + (s.conflicts ? ('، و' + s.conflicts + ' ملاحظة حُفظ نصاها معاً') : '') + '. لم يُحذف شيء. سيُحدَّث العرض الآن…');
       setTimeout(function () { location.reload(); }, 1600);
     };
@@ -237,11 +241,12 @@
       if (!standalone && !legacyAndroid) deferred = e;           // الجهاز القديم: لا نستدعي التثبيت المباشر لأنه ينهار
     });
     inst.onclick = function () {
+      stat('install_click');
       if (legacyAndroid) { msg(SHORTCUT); return; }
       if (deferred) {
         var d = deferred; deferred = null;                       // التثبيت المباشر يُستدعى مرة واحدة لكل حدث
         d.prompt();
-        d.userChoice.then(function (c) { msg(c && c.outcome === 'accepted' ? 'تم التثبيت.' : 'لم يكتمل التثبيت. يمكنك إعادة المحاولة من قائمة المتصفح (⋮) ← «تثبيت التطبيق».'); });
+        d.userChoice.then(function (c) { (c && c.outcome === 'accepted') && stat('install_accepted'); msg(c && c.outcome === 'accepted' ? 'تم التثبيت.' : 'لم يكتمل التثبيت. يمكنك إعادة المحاولة من قائمة المتصفح (⋮) ← «تثبيت التطبيق».'); });
         return;
       }
       msg(MANUAL);

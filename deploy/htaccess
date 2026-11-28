@@ -33,12 +33,12 @@ AddType application/manifest+json .webmanifest
 
 # PWA: هذه الملفات لا تُخزَّن في المتصفح ولا في الـ CDN (وإلا لا تصل تحديثات الأسماء الأسبوعية)
 <IfModule mod_expires.c>
-  <FilesMatch "^(sw\.js|manifest\.webmanifest|offline\.html|pwa\.js)$">
+  <FilesMatch "^(sw\.js|manifest\.webmanifest|offline\.html|pwa\.js|stats\.js)$">
     ExpiresActive Off
   </FilesMatch>
 </IfModule>
 <IfModule mod_headers.c>
-  <FilesMatch "^(sw\.js|manifest\.webmanifest|offline\.html|pwa\.js)$">
+  <FilesMatch "^(sw\.js|manifest\.webmanifest|offline\.html|pwa\.js|stats\.js)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>
