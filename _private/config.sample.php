@@ -8,5 +8,7 @@ return [
     'mail_to'    => 'info@tajalliyat.com',            // where notifications go
     'mail_from'  => 'info@tajalliyat.com',            // must be a mailbox on the domain
     'origins'    => ['https://tajalliyat.com', 'https://www.tajalliyat.com'],
+    'stats_token' => 'CHANGE_ME_LONG_RANDOM',          // كلمة سر لوحة /backend/api/stats.php (16 حرفاً على الأقل). تُكتب في config.php على الخادم فقط
+    'stats_tz'    => 'UTC',                           // منطقة التوقيت لتجميع الأيام (مثل Africa/Cairo أو Asia/Riyadh)
     'rate_limit' => 5,                                // messages per IP per hour
 ];
