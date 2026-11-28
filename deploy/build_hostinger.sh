@@ -39,7 +39,7 @@ if [ "${ABOUT:-1}" = 1 ]; then
   python3 "$(dirname "$0")/about.py" "$OUT"
 fi
 # إحصاء مجهول: مفعّل افتراضياً (STATS=0 لإيقافه)
-if [ "${STATS:-0}" = 1 ]; then
+if [ "${STATS:-1}" = 1 ]; then
   python3 "$(dirname "$0")/stats.py" "$OUT"
 fi
 # PWA: مفعّل افتراضياً (PWA=0 لإيقافه)  [PWA_BASE=/pwa-preview/]  [PWA_PREVIEW=1 لمنع الفهرسة]
