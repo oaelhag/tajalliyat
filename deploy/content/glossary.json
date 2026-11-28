@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "direction": "ar->en",
+  "note": "مصطلحات الترجمة الإنجليزية المستقبلية. approved = من النص المعتمد (site_texts.json)، draft = اقتراح ينتظر المراجعة. لا تُترجم نصوص أخرى قبل اعتماد المصطلحات.",
+  "terms": [
+    {"ar": "تجلٍّ", "en": "tajallī", "status": "approved", "source": "site_texts.json#about_tajalliyat"},
+    {"ar": "تجليات", "en": "Tajalliyat", "status": "approved", "source": "site_texts.json#about_tajalliyat"},
+    {"ar": "اسم", "en": "Name", "status": "draft", "note": "بحرف كبير حين يُقصد اسم من أسماء الله، كما في «Allah's Beautiful Names» في النص المعتمد."},
+    {"ar": "أثر", "en": "sign", "status": "draft", "note": "النص المعتمد يستعمل «signs» لمعنى «آثار الأسماء». يُراجَع هل يكفي في كل المواضع (أثر الاسم في حياتي)."},
+    {"ar": "رحلة", "en": "Journey", "status": "draft", "note": "مسار الأسماء المتدرج في صفحة «رحلتي»."},
+    {"ar": "الأسماء الحسنى", "en": "the Beautiful Names (of Allah)", "status": "draft", "note": "النص المعتمد يستعمل «Allah's Beautiful Names»؛ تُوحَّد الصيغة عند الاعتماد."}
+  ]
+}

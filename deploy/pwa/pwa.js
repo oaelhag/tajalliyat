@@ -4,7 +4,7 @@
 (function () {
   'use strict';
   var BASE = new URL('./', document.currentScript.src).pathname;      // '/' على الإنتاج
-  var LS = { install: 'tajalli_pwa_install_v1', ios: 'tajalli_pwa_ios_hint_v1' };
+  var LS = { install: 'tajalli_pwa_install_v1', ios: 'tajalli_pwa_ios_hint_v1', legacy: 'tajalli_pwa_legacy_hint_v1' };
   var ATHAR = 'tajalli_athar_v1', JOURNEY = 'journey', PREFS = ['aud', 'theme', 'rtime'];
   var BOOK_KEY = /^tajalli_book_[a-z0-9]+_v1$/;
   var FORMAT = { app: 'tajalliyat', kind: 'notebook', version: 1 };
@@ -19,6 +19,9 @@
     (kids || []).forEach(function (c) { e.append(c); });
     return e;
   }
+  // أندرويد بـ Chrome أقدم من 139 (آخر إصدار لأندرويد 8 و9): التطبيق المثبّت (WebAPK) ينهار على هذه الأجهزة، فنعرض «إنشاء اختصار» بدل التثبيت
+  var chromeMajor = +((navigator.userAgent.match(/Chrome\/(\d+)/) || [])[1] || 0);
+  var legacyAndroid = /android/i.test(navigator.userAgent) && chromeMajor > 0 && chromeMajor < 139;
   var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
 
@@ -205,8 +208,8 @@
     var msgEl = el('p', { id: 'pwa-msg', role: 'status' });
     var msg = function (t) { msgEl.textContent = t; };
     var panel = el('section', { id: 'pwa-panel', 'aria-label': 'التطبيق ونسخة الدفتر' });
-    panel.append(el('h2', { text: standalone ? 'نسخة الدفتر' : 'ثبّت التطبيق' }));
-    if (!standalone) panel.append(el('p', { text: 'صدّر دفترك قبل التثبيت حتى تنقله.' }));
+    panel.append(el('h2', { text: standalone ? 'نسخة الدفتر' : (legacyAndroid ? 'اختصار على الشاشة الرئيسية' : 'ثبّت التطبيق') }));
+    if (!standalone && !legacyAndroid) panel.append(el('p', { text: 'صدّر دفترك قبل التثبيت حتى تنقله.' }));
     var row = el('div', { class: 'pwa-row' });
     var exp = el('button', { type: 'button', id: 'pwa-export', text: 'تصدير الدفتر' });
     var imp = el('button', { type: 'button', id: 'pwa-import', text: 'استيراد الدفتر' });
@@ -223,7 +226,7 @@
     var deferred = null;
     window.addEventListener('beforeinstallprompt', function (e) {
       e.preventDefault();
-      if (standalone || lsGet(LS.install)) return;
+      if (standalone || legacyAndroid || lsGet(LS.install)) return;
       deferred = e; inst.hidden = false;
     });
     inst.onclick = function () {
@@ -232,6 +235,15 @@
       d.prompt(); d.userChoice.then(function (c) { msg(c && c.outcome === 'accepted' ? 'تم التثبيت.' : ''); });
     };
     window.addEventListener('appinstalled', function () { inst.hidden = true; lsSet(LS.install, String(Date.now())); });
+
+    // الجهاز القديم: تلميح الاختصار بدل التثبيت
+    if (legacyAndroid && !standalone && !lsGet(LS.legacy)) {
+      var lclose = el('button', { type: 'button', 'aria-label': 'إغلاق التلميح', text: '×' });
+      var lhint = el('div', { class: 'pwa-hint', role: 'note' }, [
+        el('span', { text: 'من قائمة Chrome اختر «إضافة إلى الشاشة الرئيسية» ثم «إنشاء اختصار». يفتح الموقع ويعمل بدون إنترنت.' }), lclose]);
+      lclose.onclick = function () { lsSet(LS.legacy, String(Date.now())); lhint.remove(); };
+      panel.append(lhint);
+    }
 
     // iPhone: تلميح قابل للإغلاق، لا يتكرر بعد إغلاقه
     if (isIOS && !standalone && !lsGet(LS.ios)) {

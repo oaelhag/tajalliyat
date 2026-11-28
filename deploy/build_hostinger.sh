@@ -31,6 +31,11 @@ cat > "$OUT/404.html" <<'EOT'
 EOT
 cp "$(dirname "$0")/htaccess" "$OUT/.htaccess"
 echo "built $REF -> $OUT ($(git rev-parse --short "$REF"))"
+# معنى «تجليات» في الصفحة الأولى (اختياري): ABOUT=1
+if [ "${ABOUT:-0}" = 1 ]; then
+  python3 "$(dirname "$0")/texts.py" --check
+  python3 "$(dirname "$0")/about.py" "$OUT"
+fi
 # PWA (اختياري): PWA=1  [PWA_BASE=/pwa-preview/]  [PWA_PREVIEW=1 لمنع الفهرسة]
 if [ "${PWA:-0}" = 1 ]; then
   python3 "$(dirname "$0")/pwa.py" "$OUT" "${PWA_BASE:-/}" ${PWA_PREVIEW:+preview}

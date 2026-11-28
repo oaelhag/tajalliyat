@@ -5,7 +5,7 @@
   BASE     مسار النشر ('/' على الإنتاج؛ '/pwa-preview/' لمعاينة داخل مجلد).
   preview  يمنع الفهرسة (noindex + robots + X-Robots-Tag) لنسخ المعاينة.
 """
-import sys, json, re, hashlib, pathlib
+import os, sys, json, re, hashlib, pathlib
 
 OUT = pathlib.Path(sys.argv[1])
 BASE = sys.argv[2] if len(sys.argv) > 2 else '/'
@@ -36,6 +36,10 @@ manifest = {
         {'src': BASE + 'icon-maskable-192.png', 'sizes': '192x192', 'type': 'image/png', 'purpose': 'maskable'},
         {'src': BASE + 'icon-maskable-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'maskable'}],
     'shortcuts': [{'name': 'اسم يناسب حالك', 'url': BASE + 'guide.html'}, {'name': 'أثر الاسم في حياتي', 'url': BASE + 'athar.html'}]}
+if os.environ.get('ABOUT') == '1':                  # وصف المانيفست من النص العربي المعتمد نفسه
+    sys.path.insert(0, str(pathlib.Path(__file__).parent))
+    import texts
+    manifest['description'] = texts.ar('about_tajalliyat')
 for f in ['icon-192.png', 'icon-512.png', 'icon-maskable-192.png', 'icon-maskable-512.png', 'apple-touch-icon.png', 'favicon-48.png', 'icon.svg']:
     if not (OUT / f).exists():
         die('missing ' + f)

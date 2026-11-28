@@ -143,6 +143,18 @@ const B = 'http://localhost:8790' + PB.replace(/\/$/, '');
   ok((await ip.locator('.pwa-hint').count()) === 0, 'iPhone: hint stays closed after dismissal');
   await ip.locator('#pwa-panel').scrollIntoViewIfNeeded(); await ip.screenshot({ path: '/tmp/claude-0/pwa-ios.png' }); await ios.close();
 
+  // ── 7b) أندرويد قديم (Chrome 138): لا زر تثبيت، تلميح «إنشاء اختصار» بدلاً منه
+  const old = await browser.newContext({ viewport: { width: 360, height: 740 }, userAgent: 'Mozilla/5.0 (Linux; Android 8.1.0; Jelly Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.7204.179 Mobile Safari/537.36' });
+  const op = await old.newPage();
+  await op.goto(B + '/', { waitUntil: 'networkidle' });
+  await op.evaluate(() => { const e = new Event('beforeinstallprompt', { cancelable: true }); e.prompt = () => Promise.resolve(); e.userChoice = Promise.resolve({ outcome: 'dismissed' }); window.dispatchEvent(e); });
+  ok(!(await op.locator('#pwa-install').isVisible()), 'old Android (Chrome 138): install button hidden');
+  ok((await op.locator('.pwa-hint').innerText()).includes('إنشاء اختصار') && !(await op.locator('#pwa-panel').innerText()).includes('صدّر دفترك قبل التثبيت'), 'old Android: shortcut hint shown instead of install notice');
+  ok(await op.locator('#pwa-export').isVisible() && await op.locator('#pwa-import').isVisible(), 'old Android: export/import still available');
+  await op.click('.pwa-hint button'); await op.reload({ waitUntil: 'networkidle' });
+  ok((await op.locator('.pwa-hint').count()) === 0, 'old Android: hint stays closed after dismissal');
+  await op.locator('#pwa-panel').scrollIntoViewIfNeeded(); await op.screenshot({ path: '/tmp/claude-0/pwa-legacy.png' }); await old.close();
+
   // ── 8) قابلية التثبيت (CDP)
   const cdp = await ctx.newCDPSession(page);
   const man = await cdp.send('Page.getAppManifest'); const inst = await cdp.send('Page.getInstallabilityErrors');
