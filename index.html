@@ -254,6 +254,12 @@ body{transition:background .35s,color .35s}
 .shwrap.open .shmenu{display:flex}
 .shwrap .shmenu button,.shwrap .shmenu a{width:100%;justify-content:flex-start;border:0;background:none;border-radius:8px;min-height:40px;padding:6px 12px;font-size:var(--fs-ui);text-align:start;box-sizing:border-box}
 .shwrap .shmenu button:hover,.shwrap .shmenu a:hover{background:var(--lapis-soft);transform:none}
+.rowshare{display:flex;align-items:flex-start;gap:8px}
+.rowshare>p{flex:1;min-width:0}
+.rowshare>.shwrap{margin-top:4px}
+.shwrap .shmenu.up{top:auto;bottom:calc(100% + 4px)}
+.ayah .shwrap{display:block;margin:8px auto 0;width:max-content}
+.ayah .shmenu{inset-inline:auto;left:50%;margin-left:-75px}
 @media (max-width:640px){body{padding-bottom:calc(var(--navh,64px) + 24px + env(safe-area-inset-bottom,0px))}}
 
 /* ── معنى «تجليات» (الصفحة الأولى) ── */
@@ -387,7 +393,7 @@ async function shareCard(text,ref,kind,meta){
       h('div',{class:'row'},h('a',{class:'btn',href:url,download:'tajalliyat.png'},'تنزيل الصورة'),h('button',{class:'btn ghost',onclick:close},'إغلاق'))));
   document.body.style.overflow='hidden';document.addEventListener('keydown',onKey,true);
   document.body.append(m);m.querySelector('.btn').focus();}
-function shareRow(text,ref,kind,meta,mini){
+function shareRowFull(text,ref,kind,meta,mini){
   const cp=h('button',{type:'button',onclick:async()=>{const ok=await copyText(fullText(text,ref,meta));cp.textContent=ok?'تم النسخ ✓':'تعذّر النسخ';setTimeout(()=>cp.textContent='نسخ',1800);}},'نسخ');
   return h('div',{class:'share'+(mini?' mini':'')},cp,
     h('a',{href:'https://wa.me/?text='+encodeURIComponent(fullText(text,ref,meta)),target:'_blank',rel:'noopener'},'واتساب'),
@@ -395,17 +401,32 @@ function shareRow(text,ref,kind,meta,mini){
 function nmeta(n,label){return {id:n.id,plain:n.plain,name:n.name,label};}
 const SHICON='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/></svg>';
 let openShare=null;
-function closeShare(){if(openShare){openShare.wrap.classList.remove('open');openShare.btn.setAttribute('aria-expanded','false');openShare=null;}}
+function closeShare(){if(openShare){openShare.wrap.classList.remove('open');openShare.btn.setAttribute('aria-expanded','false');openShare.menu.style.transform='';openShare.menu.classList.remove('up');openShare=null;}}
 document.addEventListener('click',e=>{if(openShare&&!openShare.wrap.contains(e.target))closeShare();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&openShare){const b=openShare.btn;closeShare();b.focus();}});
-function shareItem(t,n,kind){
-  const menu=shareRow(t+(kind==='q'?'':'.'),'',kind,nmeta(n,kind==='q'?'سؤال للتأمل':'تجلٍّ للتأمل'),true);
+function fitMenu(m,btn){
+  m.style.transform='';m.classList.remove('up');
+  const hd=document.querySelector('.top'),nav=document.querySelector('nav');
+  const topLim=(hd?hd.getBoundingClientRect().bottom:0)+6;
+  const botLim=Math.min(innerHeight,nav&&getComputedStyle(nav).position==='fixed'?nav.getBoundingClientRect().top:innerHeight)-6;
+  let r=m.getBoundingClientRect();
+  if(r.bottom>botLim){                                              /* لا مكان تحت الزر */
+    window.scrollBy({top:btn.getBoundingClientRect().top-(topLim+8),behavior:'instant'});   /* نرفع الزر تحت الشريط العلوي مباشرة لتتّسع القائمة */
+    r=m.getBoundingClientRect();
+    if(r.bottom>botLim){m.classList.add('up');r=m.getBoundingClientRect();if(r.top<topLim){m.classList.remove('up');r=m.getBoundingClientRect();}}   /* لا يمكن التمرير أكثر: نفتح لفوق */
+  }
+  let dx=0;if(r.left<8)dx=8-r.left;else if(r.right>innerWidth-8)dx=innerWidth-8-r.right;
+  if(dx)m.style.transform='translateX('+dx+'px)';}
+/* كل صفوف المشاركة صارت زراً واحداً بقائمة (نسخ / واتساب / بطاقة) بنفس الوظائف الأصلية (shareRowFull) */
+function shareRow(text,ref,kind,meta,mini){
+  const menu=shareRowFull(text,ref,kind,meta,true);
   menu.classList.add('shmenu');menu.setAttribute('aria-label','خيارات المشاركة');
   const btn=h('button',{type:'button',class:'shbtn','aria-label':'مشاركة','aria-haspopup':'true','aria-expanded':'false'});btn.innerHTML=SHICON;
   const wrap=h('div',{class:'shwrap'},btn,menu);
-  btn.addEventListener('click',e=>{e.stopPropagation();const was=openShare&&openShare.wrap===wrap;closeShare();if(!was){wrap.classList.add('open');btn.setAttribute('aria-expanded','true');openShare={wrap,btn};}});
+  btn.addEventListener('click',e=>{e.stopPropagation();const was=openShare&&openShare.wrap===wrap;closeShare();if(!was){wrap.classList.add('open');btn.setAttribute('aria-expanded','true');openShare={wrap,btn,menu};fitMenu(menu,btn);}});
   menu.addEventListener('click',e=>{if(e.target.closest('button,a'))setTimeout(closeShare,e.target.closest('a')?0:900);});
-  return h('div',{class:'shi'},h('span',{},t),wrap);}
+  return wrap;}
+function shareItem(t,n,kind){return h('div',{class:'shi'},h('span',{},t),shareRow(t+(kind==='q'?'':'.'),'',kind,nmeta(n,kind==='q'?'سؤال للتأمل':'تجلٍّ للتأمل'),true));}
 
 /* ── theme ─────────────────────────────── */
 function curTheme(){const t=document.documentElement.dataset.theme;if(t)return t;return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
@@ -427,11 +448,11 @@ function today(){
       h('div',{class:'meta'},h('span',{},hijri),h('span',{},FOR[aud])),
       h('p',{class:'eyebrow'},'تجلٍّ اليوم من اسم'),
       h('h1',{class:'name'},n.name),
-      h('p',{class:'tajalli'},taj+'.'),shareRow(taj+'.','','taj',nmeta(n,'تجلّي اليوم')),
+      h('div',{class:'rowshare'},h('p',{class:'tajalli'},taj+'.'),shareRow(taj+'.','','taj',nmeta(n,'تجلّي اليوم'))),
       h('p',{class:'muted'},'لا تبحث عن هذا الاسم في الكتب اليوم؛ ابحث عنه في يومك. حين ترى هذا المعنى أمامك، قل في سرّك: «يا '+n.plain.split(' ')[0].replace(/^ال/,'')+'، وصلني أثرك».'),
       ayahEl(n.ayah),
       h('div',{class:'trio'},
-        h('div',{},h('h3',{},'سؤال اليوم'),h('p',{},q),shareRow(q,'','q',nmeta(n,'سؤال اليوم'),true)),
+        h('div',{},h('h3',{},'سؤال اليوم'),h('div',{class:'rowshare'},h('p',{},q),shareRow(q,'','q',nmeta(n,'سؤال اليوم'),true))),
         h('div',{},h('h3',{},'مهمة صغيرة'),h('p',{},task)),
         h('div',{},h('h3',{},'المعنى في سطر'),h('p',{},g.simple))),
       h('div',{class:'actions'},h('a',{class:'btn',href:'#name-'+n.id},'افتح صفحة الاسم'),h('a',{class:'btn ghost',href:'#journey'},'تابع رحلتك')))
@@ -557,13 +578,7 @@ function newsBlock(){const L=(window.NEWS||[]).slice().sort((a,b)=>b[0].localeCo
   const row=r=>h('li',{},h('time',{datetime:r[0]},new Date(r[0]).toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'})),h('b',{},r[1]),h('span',{},r[2]));
   return h('div',{class:'news'},h('h2',{},'ما الجديد'),h('ul',{},L.slice(0,6).map(row)),
     L.length>6?h('details',{},h('summary',{},'كل التحديثات'),h('ul',{style:'margin-top:12px'},L.slice(6).map(row))):null);}
-const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSefTfJgH1C3c6GfhVvPjChKNyRQyJ8YbD9GpkvZ5ZsmajaH9w/viewform';
-function contactBlock(){const box=h('div',{});
-  const d=h('details',{ontoggle:()=>{if(d.open&&!box.firstChild)box.append(h('iframe',{src:FORM_URL+'?embedded=true',title:'نموذج التواصل',loading:'lazy'}));}},
-    h('summary',{},'اكتب لنا اقتراحاً أو ملاحظة أو سؤالاً'),box);
-  return h('div',{class:'contact'},h('h2',{},'تواصل معنا'),h('p',{},'يسعدنا أن نسمع رأيك. رسالتك تصل إلى صاحب الموقع وحده، ووسيلة التواصل اختيارية.'),d,
-    h('p',{class:'muted small'},h('a',{href:FORM_URL,target:'_blank',rel:'noopener'},'أو افتح النموذج في صفحة مستقلة')));}
-function reminderBlock(){
+function contactBlock(){return null;} function reminderBlock(){
   const time=h('input',{type:'time',id:'rtime',value:store.get('rtime','07:30')});
   const msg=h('p',{class:'status','aria-live':'polite'});
   const ch=h('select',{id:'rch'},h('option',{value:'whatsapp'},'واتساب'),h('option',{value:'email'},'البريد'));
