@@ -2,7 +2,7 @@
  * يُولَّد من deploy/pwa/sw.js بواسطة deploy/pwa.py (يستبدل __PLACEHOLDERS__).
  * قواعد: GET من نفس الأصل فقط؛ لا /backend/؛ لا فيديو ولا PDF؛ لا skipWaiting تلقائي.
  */
-const VERSION = '764d34b704c5';
+const VERSION = 'a40298b0038b';
 const BASE = '/pwa-preview/';                         // '/' على الإنتاج
 const CORE = ["/pwa-preview/", "/pwa-preview/guide.html", "/pwa-preview/athar.html", "/pwa-preview/offline.html", "/pwa-preview/manifest.webmanifest", "/pwa-preview/pwa.js", "/pwa-preview/icon.svg", "/pwa-preview/favicon-48.png", "/pwa-preview/apple-touch-icon.png", "/pwa-preview/icon-192.png", "/pwa-preview/icon-512.png", "/pwa-preview/assets/fonts/amiri-quran-arabic-400-normal.woff2", "/pwa-preview/assets/fonts/fonts.css", "/pwa-preview/assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2", "/pwa-preview/assets/fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2", "/pwa-preview/assets/fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2", "/pwa-preview/assets/fonts/noto-naskh-arabic-arabic-400-normal.woff2", "/pwa-preview/assets/fonts/noto-naskh-arabic-arabic-600-normal.woff2", "/pwa-preview/assets/fonts/noto-naskh-arabic-arabic-700-normal.woff2", "/pwa-preview/assets/fonts/reem-kufi-arabic-500-normal.woff2", "/pwa-preview/assets/fonts/reem-kufi-arabic-700-normal.woff2"];                           // القشرة: يجب أن تنجح كلها
 const OPTIONAL = ["/pwa-preview/books/", "/pwa-preview/feel/", "/pwa-preview/books/reader.css", "/pwa-preview/books/reader.js"];                   // قشرة إضافية: تُحمَّل إن أمكن
@@ -72,7 +72,7 @@ async function navigate(e) {
 async function swr(e, name, max) {
   const cache = await caches.open(name);
   const hit = await cache.match(e.request, { ignoreSearch: true });
-  const net = fetch(e.request).then(res => { const saved = put(name, e.request, res, max).catch(() => {}); e.waitUntil(saved); return res; }).catch(() => null);
+  const net = fetch(e.request, { cache: 'no-cache' }).then(res => { const saved = put(name, e.request, res, max).catch(() => {}); e.waitUntil(saved); return res; }).catch(() => null);
   e.waitUntil(net);
   return hit || (await net) || Response.error();
 }
