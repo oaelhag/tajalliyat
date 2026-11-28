@@ -61,6 +61,16 @@ for ($i = 0; $i < STATS_MAX_ITEMS_PER_KIND_DAY + 20; $i++) stats_bump($pdo, '202
 $c = (int)$pdo->query("SELECT COUNT(*) FROM stats_daily WHERE kind='name'")->fetchColumn();
 ok($c <= STATS_MAX_ITEMS_PER_KIND_DAY, "new items per kind/day are capped ($c)");
 
+// 5b) أخطاء الكتابة لا تُبلع (كانت تُرجع نجاحاً كاذباً): جدول ببنية خاطئة → استثناء، لا n=1
+$bad = new PDO('sqlite::memory:', null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+$bad->exec('CREATE TABLE stats_daily (day TEXT NOT NULL, kind TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, kind))');   // ينقصه عمود item
+$threw = false; try { stats_bump($bad, '2026-11-28', 'name', 'rahman'); } catch (Throwable $e) { $threw = true; }
+ok($threw, 'a failing INSERT is surfaced instead of being swallowed as success');
+ok(stats_error_code(new PDOException('x', 0)) !== '' && strpos(stats_error_code($e), 'rahman') === false, 'error code helper exposes no message text');
+$dup = db(); stats_bump($dup, '2026-11-28', 'name', 'rahman');
+$dupE = null; try { $dup->prepare('INSERT INTO stats_daily (day, kind, item, n) VALUES (?,?,?,1)')->execute(['2026-11-28', 'name', 'rahman']); } catch (PDOException $x) { $dupE = $x; }
+ok($dupE !== null && stats_is_duplicate($dupE), 'duplicate-key errors are recognised (the only error that may be absorbed)');
+
 // 6) اليوم بحسب المنطقة الزمنية
 $pdo = db();
 handle_hit($cfg, $srv, '{"e":[["visit",""]]}', $pdo, 1795906800);      // 2026-11-28 22:20 UTC = 00:20 يوم 29 في القاهرة

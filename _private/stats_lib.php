@@ -67,7 +67,8 @@ function stats_rate_ok(PDO $pdo, string $ipHash, int $now, int $count): bool
     if ($cur === false) {
         try {
             $pdo->prepare('INSERT INTO stats_rl (ip_hash, bucket, n) VALUES (?,?,?)')->execute([$ipHash, $bucket, $count]);
-        } catch (Throwable $e) {
+        } catch (PDOException $e) {
+            if (!stats_is_duplicate($e)) throw $e;
             $pdo->prepare('UPDATE stats_rl SET n = n + ? WHERE ip_hash = ? AND bucket = ?')->execute([$count, $ipHash, $bucket]);
         }
     } else {
@@ -77,6 +78,19 @@ function stats_rate_ok(PDO $pdo, string $ipHash, int $now, int $count): bool
         $pdo->prepare('DELETE FROM stats_rl WHERE bucket < ?')->execute([$bucket - 120]);
     }
     return true;
+}
+
+/** هل الخطأ تكرار مفتاح (SQLSTATE 23000: MySQL 1062 / SQLite constraint)؟ */
+function stats_is_duplicate(PDOException $e): bool
+{
+    return (string)$e->getCode() === '23000';
+}
+
+/** رمز خطأ آمن للعرض: SQLSTATE ورمز المحرّك فقط، بلا رسالة قد تحوي بيانات. */
+function stats_error_code(Throwable $e): string
+{
+    if ($e instanceof PDOException) return (string)$e->getCode() . '/' . (string)($e->errorInfo[1] ?? '');
+    return get_class($e);
 }
 
 /** يزيد عدّاد (يوم، نوع، عنصر). يعمل على MySQL وSQLite: UPDATE أولاً ثم INSERT. */
@@ -90,8 +104,9 @@ function stats_bump(PDO $pdo, string $day, string $kind, string $item): bool
     if ((int)$cnt->fetchColumn() >= STATS_MAX_ITEMS_PER_KIND_DAY) return false;      // عنصر جديد فوق الحدّ: يُهمل
     try {
         $pdo->prepare('INSERT INTO stats_daily (day, kind, item, n) VALUES (?,?,?,1)')->execute([$day, $kind, $item]);
-    } catch (Throwable $e) {                                                         // سباق مع طلب آخر: الصف صار موجوداً
-        $up->execute([$day, $kind, $item]);
+    } catch (PDOException $e) {
+        if (!stats_is_duplicate($e)) throw $e;                                       // أي خطأ آخر يجب أن يظهر لا أن يُبلع
+        $up->execute([$day, $kind, $item]);                                          // سباق مع طلب آخر: الصف صار موجوداً
     }
     return true;
 }

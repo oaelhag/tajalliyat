@@ -25,7 +25,7 @@ try {
 } catch (Throwable $e) {
     error_log('hit.php: ' . $e->getMessage());
     $status = 503;                                   // الجداول غير موجودة بعد أو خطأ في القاعدة: لا يؤثر على الموقع
-    $payload = ['ok' => false, 'error' => 'not_ready'];
+    $payload = ['ok' => false, 'error' => 'not_ready', 'code' => stats_error_code($e)];   // رمز فقط (بلا رسالة) لتشخيص الإعداد
 }
 
 http_response_code($status);
